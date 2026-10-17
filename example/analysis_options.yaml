@@ -8,3 +8,11 @@ analyzer:
     - macos/**
     - linux/**
 include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    unnecessary_primary_constructor_body: true
+    use_declaring_parameters: true
+    use_null_aware_elements: true
+    # Re-flags every class without a constructor once migrated.
+    use_primary_constructors: false

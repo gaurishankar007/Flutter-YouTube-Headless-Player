@@ -42,7 +42,7 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
   ///
   /// To start from a YouTube URL instead, use
   /// [YoutubePlayerController.fromUrl].
-  YoutubePlayerController({
+  new({
     this.initialVideoId,
     this.autoPlay = false,
     this.startMuted = false,
@@ -72,7 +72,7 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
   /// In debug mode, asserts that a video id can be extracted from
   /// [videoUrl]; in release, an unparseable URL results in a controller
   /// with no initial video.
-  YoutubePlayerController.fromUrl(
+  new fromUrl(
     String videoUrl, {
     this.autoPlay = false,
     this.startMuted = false,

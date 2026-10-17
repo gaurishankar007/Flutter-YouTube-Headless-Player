@@ -4,7 +4,13 @@
 /// treats quality requests as a hint only. `YoutubePlayerController`'s
 /// `setPlaybackQuality` is therefore best-effort, while quality *change*
 /// events remain reliable.
-enum YoutubeQuality {
+enum YoutubeQuality(
+  /// The raw quality identifier used on the wire by the IFrame API.
+  final String code,
+
+  /// A short human readable label suitable for quality menus.
+  final String label,
+) {
   /// Let YouTube pick the quality automatically (`default`).
   auto('default', 'Auto'),
 
@@ -34,14 +40,6 @@ enum YoutubeQuality {
 
   /// Above 4K (`highres`).
   highres('highres', '4K+');
-
-  const YoutubeQuality(this.code, this.label);
-
-  /// The raw quality identifier used on the wire by the IFrame API.
-  final String code;
-
-  /// A short human readable label suitable for quality menus.
-  final String label;
 
   /// Resolves the quality matching a raw IFrame API [code].
   ///

@@ -1,12 +1,13 @@
 import 'package:material_ui/material_ui.dart';
 
 /// Error message shown over the video when playback fails.
-class YoutubeErrorBanner extends StatelessWidget {
-  /// Creates an error banner with an optional [message].
-  const YoutubeErrorBanner({this.message, super.key});
-
+class const YoutubeErrorBanner({
   /// The error description; a generic message is shown when `null`.
-  final String? message;
+  final String? message,
+  super.key,
+}) extends StatelessWidget {
+  /// Creates an error banner with an optional [message].
+  this;
 
   @override
   Widget build(BuildContext context) {

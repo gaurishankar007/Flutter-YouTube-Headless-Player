@@ -7,19 +7,16 @@ import 'package:youtube_headless_player/src/ui/controllers/youtube_player_contro
 ///
 /// Captions only render for videos that provide (or auto-generate) a
 /// caption track.
-class YoutubeCaptionsButton extends StatelessWidget {
-  /// Creates a captions toggle bound to [controller].
-  const YoutubeCaptionsButton({
-    required this.controller,
-    this.color = Colors.white,
-    super.key,
-  });
-
+class const YoutubeCaptionsButton({
   /// The controller to observe and act on.
-  final YoutubePlayerController controller;
+  required final YoutubePlayerController controller,
 
   /// Icon color.
-  final Color color;
+  final Color color = Colors.white,
+  super.key,
+}) extends StatelessWidget {
+  /// Creates a captions toggle bound to [controller].
+  this;
 
   @override
   Widget build(BuildContext context) {

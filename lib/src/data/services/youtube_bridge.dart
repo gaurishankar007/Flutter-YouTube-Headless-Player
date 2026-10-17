@@ -14,15 +14,15 @@ import 'package:youtube_headless_player/src/domain/models/youtube_quality.dart';
 /// generated per action anywhere else in the package.
 @internal
 @immutable
-class YoutubeCommand {
-  /// Creates a command with an [action] name and optional [params].
-  const YoutubeCommand(this.action, [this.params = const {}]);
-
+class const YoutubeCommand(
   /// The action identifier understood by the JavaScript dispatcher.
-  final String action;
+  final String action, [
 
   /// Additional parameters merged into the command payload.
-  final Map<String, Object?> params;
+  final Map<String, Object?> params = const {},
+]) {
+  /// Creates a command with an [action] name and optional [params].
+  this;
 
   /// The JSON payload sent over the bridge.
   Map<String, Object?> toJson() => {'action': action, ...params};

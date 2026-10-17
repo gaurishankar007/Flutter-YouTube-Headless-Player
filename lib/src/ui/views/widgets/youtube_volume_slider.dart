@@ -8,23 +8,19 @@ import 'package:youtube_headless_player/src/ui/controllers/youtube_player_contro
 /// The slider stays collapsed until the pointer hovers over the control
 /// (desktop/web) or the button is tapped once (touch); tapping while
 /// revealed toggles mute — matching the YouTube web player.
-class YoutubeVolumeSlider extends StatefulWidget {
-  /// Creates a volume control bound to [controller].
-  const YoutubeVolumeSlider({
-    required this.controller,
-    this.sliderWidth = 72,
-    this.color = Colors.white,
-    super.key,
-  });
-
+class const YoutubeVolumeSlider({
   /// The controller to observe and act on.
-  final YoutubePlayerController controller;
+  required final YoutubePlayerController controller,
 
   /// Width of the slider track when revealed.
-  final double sliderWidth;
+  final double sliderWidth = 72,
 
   /// Color of the icon and slider.
-  final Color color;
+  final Color color = Colors.white,
+  super.key,
+}) extends StatefulWidget {
+  /// Creates a volume control bound to [controller].
+  this;
 
   @override
   State<YoutubeVolumeSlider> createState() => _YoutubeVolumeSliderState();

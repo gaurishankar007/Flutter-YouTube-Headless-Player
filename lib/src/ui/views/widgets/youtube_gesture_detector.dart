@@ -13,35 +13,28 @@ enum _GestureZone { backward, center, forward }
 /// - Double tap on the left/right third → [onDoubleTapBackward] /
 ///   [onDoubleTapForward] (seek), with an animated skip indicator.
 /// - Double tap in the middle → [onDoubleTapCenter] (play/pause).
-class YoutubeGestureDetector extends StatefulWidget {
-  /// Creates the gesture layer.
-  const YoutubeGestureDetector({
-    this.onTap,
-    this.onDoubleTapBackward,
-    this.onDoubleTapForward,
-    this.onDoubleTapCenter,
-    this.seekStep = const Duration(seconds: 10),
-    this.child,
-    super.key,
-  });
-
+class const YoutubeGestureDetector({
   /// Called on a single tap anywhere on the surface.
-  final VoidCallback? onTap;
+  final VoidCallback? onTap,
 
   /// Called on a double tap over the left zone.
-  final VoidCallback? onDoubleTapBackward;
+  final VoidCallback? onDoubleTapBackward,
 
   /// Called on a double tap over the right zone.
-  final VoidCallback? onDoubleTapForward;
+  final VoidCallback? onDoubleTapForward,
 
   /// Called on a double tap over the center zone.
-  final VoidCallback? onDoubleTapCenter;
+  final VoidCallback? onDoubleTapCenter,
 
   /// Seek amount shown by the skip indicators.
-  final Duration seekStep;
+  final Duration seekStep = const Duration(seconds: 10),
 
   /// Optional content rendered underneath the gesture surface.
-  final Widget? child;
+  final Widget? child,
+  super.key,
+}) extends StatefulWidget {
+  /// Creates the gesture layer.
+  this;
 
   @override
   State<YoutubeGestureDetector> createState() => _YoutubeGestureDetectorState();
@@ -137,20 +130,13 @@ class _YoutubeGestureDetectorState extends State<YoutubeGestureDetector> {
 }
 
 /// The transient "±N seconds" indicator flashed after a double-tap seek.
-class _SeekFeedback extends StatelessWidget {
-  const _SeekFeedback({
-    required this.visible,
-    required this.alignment,
-    required this.icon,
-    required this.seconds,
-  });
-
+class const _SeekFeedback({
+  required final bool visible,
+  required final Alignment alignment,
+  required final IconData icon,
+  required final int seconds,
+}) extends StatelessWidget {
   static const Duration _fadeDuration = Duration(milliseconds: 150);
-
-  final bool visible;
-  final Alignment alignment;
-  final IconData icon;
-  final int seconds;
 
   @override
   Widget build(BuildContext context) {

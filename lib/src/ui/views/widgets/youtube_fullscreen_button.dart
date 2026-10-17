@@ -4,19 +4,16 @@ import 'package:material_ui/material_ui.dart';
 import 'package:youtube_headless_player/src/ui/controllers/youtube_player_controller.dart';
 
 /// Fullscreen enter/exit toggle.
-class YoutubeFullscreenButton extends StatelessWidget {
-  /// Creates a fullscreen button bound to [controller].
-  const YoutubeFullscreenButton({
-    required this.controller,
-    this.color = Colors.white,
-    super.key,
-  });
-
+class const YoutubeFullscreenButton({
   /// The controller to observe and act on.
-  final YoutubePlayerController controller;
+  required final YoutubePlayerController controller,
 
   /// Icon color.
-  final Color color;
+  final Color color = Colors.white,
+  super.key,
+}) extends StatelessWidget {
+  /// Creates a fullscreen button bound to [controller].
+  this;
 
   @override
   Widget build(BuildContext context) {

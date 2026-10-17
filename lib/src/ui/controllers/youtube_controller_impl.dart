@@ -16,9 +16,12 @@ import 'package:youtube_headless_player/src/ui/controllers/youtube_player_contro
 /// delegates every playback command here; the WebView host widget attaches
 /// and detaches the underlying [InAppWebViewController].
 @internal
-class YoutubeControllerImpl {
+class YoutubeControllerImpl({
+  /// The public controller whose [YoutubePlayerValue] this class mutates.
+  required final YoutubePlayerController controller,
+}) {
   /// Creates the implementation backing [controller].
-  YoutubeControllerImpl({required this.controller});
+  this;
 
   /// Reported positions within this distance of a pending seek target are
   /// considered "the seek has landed".
@@ -26,9 +29,6 @@ class YoutubeControllerImpl {
 
   /// A pending seek is abandoned after this long, whatever the engine says.
   static const Duration _seekSettleTimeout = Duration(seconds: 5);
-
-  /// The public controller whose [YoutubePlayerValue] this class mutates.
-  final YoutubePlayerController controller;
 
   final YoutubeBridge _bridge = YoutubeBridge();
   final StreamController<YoutubePlayerEvent> _eventController =

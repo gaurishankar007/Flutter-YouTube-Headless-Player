@@ -21,12 +21,13 @@ import 'package:youtube_headless_player/src/ui/controllers/youtube_player_contro
 /// - **Web**: the asset is loaded by URL from the app's own origin, so the
 ///   relative `player.js` reference and the JavaScript bridge both work.
 @internal
-class YoutubeWebView extends StatefulWidget {
-  /// Creates the WebView host bound to [controller].
-  const YoutubeWebView({required this.controller, super.key});
-
+class const YoutubeWebView({
   /// The controller whose engine lives inside this WebView.
-  final YoutubePlayerController controller;
+  required final YoutubePlayerController controller,
+  super.key,
+}) extends StatefulWidget {
+  /// Creates the WebView host bound to [controller].
+  this;
 
   @override
   State<YoutubeWebView> createState() => _YoutubeWebViewState();
@@ -115,9 +116,8 @@ class _YoutubeWebViewState extends State<YoutubeWebView> {
       initialData: initialData,
       initialSettings: _settings,
       onWebViewCreated: (webViewController) {
-        youtubeControllerImplOf(
-          widget.controller,
-        ).attachWebView(webViewController);
+        youtubeControllerImplOf(widget.controller)
+            .attachWebView(webViewController);
       },
       onLoadStop: (webViewController, url) async {
         await youtubeControllerImplOf(widget.controller).onPageLoaded();
@@ -187,13 +187,12 @@ class _YoutubeWebViewState extends State<YoutubeWebView> {
   /// tag its `postMessage` events for this specific player instance.
   WebUri _webAssetUrl() {
     final assetUrl =
-        Uri.parse(
-          resolveYoutubeAssetUrl('$_assetDirectory/index.html'),
-        ).replace(
-          queryParameters: {
-            'playerId': youtubeControllerImplOf(widget.controller).playerId,
-          },
-        );
+        Uri.parse(resolveYoutubeAssetUrl('$_assetDirectory/index.html'))
+            .replace(
+              queryParameters: {
+                'playerId': youtubeControllerImplOf(widget.controller).playerId,
+              },
+            );
     return WebUri.uri(assetUrl);
   }
 }

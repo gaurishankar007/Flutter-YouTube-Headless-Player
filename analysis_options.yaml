@@ -11,14 +11,19 @@ include: package:leancode_lint/analysis_options.yaml
 
 linter:
   rules:
-    - always_put_control_body_on_new_line
-    - always_use_package_imports
-    - avoid_void_async
-    - prefer_const_constructors
-    - prefer_const_declarations
-    - prefer_final_locals
-    - prefer_single_quotes
-    - public_member_api_docs
-    - sort_constructors_first
-    - unnecessary_const
-    - unnecessary_lambdas
+    always_put_control_body_on_new_line: true
+    always_use_package_imports: true
+    avoid_void_async: true
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_final_locals: true
+    prefer_single_quotes: true
+    public_member_api_docs: true
+    sort_constructors_first: true
+    unnecessary_const: true
+    unnecessary_lambdas: true
+    unnecessary_primary_constructor_body: true
+    use_declaring_parameters: true
+    use_null_aware_elements: true
+    # Re-flags every class without a constructor once migrated.
+    use_primary_constructors: false

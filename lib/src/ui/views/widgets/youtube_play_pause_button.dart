@@ -4,27 +4,22 @@ import 'package:material_ui/material_ui.dart';
 import 'package:youtube_headless_player/src/ui/controllers/youtube_player_controller.dart';
 
 /// Play / pause / replay button reflecting the controller state.
-class YoutubePlayPauseButton extends StatelessWidget {
-  /// Creates a play/pause button bound to [controller].
-  const YoutubePlayPauseButton({
-    required this.controller,
-    this.iconSize = 28,
-    this.color = Colors.white,
-    this.onPressed,
-    super.key,
-  });
-
+class const YoutubePlayPauseButton({
   /// The controller to observe and act on.
-  final YoutubePlayerController controller;
+  required final YoutubePlayerController controller,
 
   /// Icon size in logical pixels.
-  final double iconSize;
+  final double iconSize = 28,
 
   /// Icon color.
-  final Color color;
+  final Color color = Colors.white,
 
   /// Overrides the default play/pause/replay behavior when provided.
-  final VoidCallback? onPressed;
+  final VoidCallback? onPressed,
+  super.key,
+}) extends StatelessWidget {
+  /// Creates a play/pause button bound to [controller].
+  this;
 
   void _defaultAction() {
     final value = controller.value;

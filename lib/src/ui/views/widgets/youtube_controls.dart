@@ -35,57 +35,40 @@ import 'package:youtube_headless_player/src/ui/views/widgets/youtube_volume_slid
 /// speed and quality menus, fullscreen toggle, double-tap seeking and
 /// keyboard shortcuts (space/`k` play-pause, `j`/`l`/arrows seek, `m`
 /// mute, `f` fullscreen, `0`–`9` percentage jump).
-class YoutubeControls extends StatefulWidget {
-  /// Creates the control overlay bound to [controller].
-  const YoutubeControls({
-    required this.controller,
-    this.seekStep = const Duration(seconds: 10),
-    this.autoHideDuration = const Duration(seconds: 4),
-    this.enableKeyboardShortcuts = true,
-    this.enableDoubleTapGestures = true,
-    this.showVolumeSlider = kIsWeb,
-    this.showBottomPlayPauseButton = kIsWeb,
-    this.showCaptionsButton = true,
-    this.showSpeedMenu = true,
-    this.showQualityMenu = false,
-    this.showFullscreenButton = true,
-    this.progressBarColors = const YoutubeProgressBarColors(),
-    super.key,
-  });
-
+class const YoutubeControls({
   /// The controller the controls act on.
-  final YoutubePlayerController controller;
+  required final YoutubePlayerController controller,
 
   /// Amount seeked by double taps and arrow keys.
-  final Duration seekStep;
+  final Duration seekStep = const Duration(seconds: 10),
 
   /// Idle time after which the controls hide while playing.
-  final Duration autoHideDuration;
+  final Duration autoHideDuration = const Duration(seconds: 4),
 
   /// Whether keyboard shortcuts are handled (desktop/web).
-  final bool enableKeyboardShortcuts;
+  final bool enableKeyboardShortcuts = true,
 
   /// Whether double-tap seek and double-tap play/pause are enabled.
-  final bool enableDoubleTapGestures;
+  final bool enableDoubleTapGestures = true,
 
   /// Whether the volume control is shown in the bottom bar.
   ///
   /// Defaults to web only: on Android/iOS volume belongs to the hardware
   /// buttons (like the YouTube mobile app), so no button is rendered there.
-  final bool showVolumeSlider;
+  final bool showVolumeSlider = kIsWeb,
 
   /// Whether a play/pause button is shown in the bottom bar (below the
   /// progress bar).
   ///
   /// Defaults to web only: on Android/iOS the centered play/pause button
   /// is the sole toggle, like the YouTube mobile app.
-  final bool showBottomPlayPauseButton;
+  final bool showBottomPlayPauseButton = kIsWeb,
 
   /// Whether the closed-captions toggle is shown.
-  final bool showCaptionsButton;
+  final bool showCaptionsButton = true,
 
   /// Whether the playback speed menu is shown.
-  final bool showSpeedMenu;
+  final bool showSpeedMenu = true,
 
   /// Whether the quality menu is shown.
   ///
@@ -96,13 +79,18 @@ class YoutubeControls extends StatefulWidget {
   /// the *current* quality is still reported through
   /// `QualityChangedEvent` / `YoutubePlayerValue.quality`. Enable this only
   /// if you want the best-effort hint menu regardless.
-  final bool showQualityMenu;
+  final bool showQualityMenu = false,
 
   /// Whether the fullscreen toggle is shown.
-  final bool showFullscreenButton;
+  final bool showFullscreenButton = true,
 
   /// Colors of the embedded [YoutubeProgressBar].
-  final YoutubeProgressBarColors progressBarColors;
+  final YoutubeProgressBarColors progressBarColors =
+      const YoutubeProgressBarColors(),
+  super.key,
+}) extends StatefulWidget {
+  /// Creates the control overlay bound to [controller].
+  this;
 
   @override
   State<YoutubeControls> createState() => _YoutubeControlsState();

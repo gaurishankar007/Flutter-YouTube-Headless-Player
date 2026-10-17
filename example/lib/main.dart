@@ -9,10 +9,7 @@ void main() {
 }
 
 /// Demo application for the `youtube_headless_player` package.
-class ExampleApp extends StatelessWidget {
-  /// Creates the demo app.
-  const ExampleApp({super.key});
-
+class const ExampleApp({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,10 +25,7 @@ class ExampleApp extends StatelessWidget {
 }
 
 /// Lists the demos, each on its own page with its own controller.
-class HomeScreen extends StatelessWidget {
-  /// Creates the home screen.
-  const HomeScreen({super.key});
-
+class const HomeScreen({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,19 +65,12 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _DemoTile extends StatelessWidget {
-  const _DemoTile({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.builder,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final WidgetBuilder builder;
-
+class const _DemoTile({
+  required final IconData icon,
+  required final String title,
+  required final String subtitle,
+  required final WidgetBuilder builder,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -92,9 +79,9 @@ class _DemoTile extends StatelessWidget {
         title: Text(title),
         subtitle: Text(subtitle),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () => Navigator.of(
-          context,
-        ).push(MaterialPageRoute<void>(builder: builder)),
+        onTap: () =>
+            Navigator.of(context)
+                .push(MaterialPageRoute<void>(builder: builder)),
       ),
     );
   }
@@ -103,10 +90,7 @@ class _DemoTile extends StatelessWidget {
 /// The smallest possible integration, for reference: one controller and
 /// one widget. The controls overlay and fullscreen handling (including the
 /// back gesture) are built into [YoutubePlayer].
-class MinimalPlayer extends StatefulWidget {
-  /// Creates the minimal player.
-  const MinimalPlayer({super.key});
-
+class const MinimalPlayer({super.key}) extends StatefulWidget {
   @override
   State<MinimalPlayer> createState() => _MinimalPlayerState();
 }

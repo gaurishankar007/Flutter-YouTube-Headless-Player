@@ -3,7 +3,10 @@
 /// Not every video provides every resolution — [max] in particular only
 /// exists for videos uploaded in HD; the CDN returns a 404 placeholder for
 /// missing ones. [standard] and below are always available.
-enum YoutubeThumbnailQuality {
+enum YoutubeThumbnailQuality(
+  /// The file name used by the thumbnail CDN for this resolution.
+  final String code,
+) {
   /// 120 × 90 (`default`).
   low('default'),
 
@@ -17,10 +20,5 @@ enum YoutubeThumbnailQuality {
   standard('sddefault'),
 
   /// 1280 × 720 (`maxresdefault`).
-  max('maxresdefault');
-
-  const YoutubeThumbnailQuality(this.code);
-
-  /// The file name used by the thumbnail CDN for this resolution.
-  final String code;
+  max('maxresdefault'),
 }

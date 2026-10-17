@@ -10,19 +10,16 @@ import 'package:youtube_headless_player/src/ui/controllers/youtube_player_contro
 /// programmatic quality selection, so this menu cannot force a stream
 /// switch — YouTube keeps choosing the quality adaptively. The menu is
 /// hidden by default in `YoutubeControls` for this reason.
-class YoutubeQualityMenu extends StatelessWidget {
-  /// Creates a quality menu bound to [controller].
-  const YoutubeQualityMenu({
-    required this.controller,
-    this.color = Colors.white,
-    super.key,
-  });
-
+class const YoutubeQualityMenu({
   /// The controller to observe and act on.
-  final YoutubePlayerController controller;
+  required final YoutubePlayerController controller,
 
   /// Icon color.
-  final Color color;
+  final Color color = Colors.white,
+  super.key,
+}) extends StatelessWidget {
+  /// Creates a quality menu bound to [controller].
+  this;
 
   @override
   Widget build(BuildContext context) {

@@ -29,64 +29,53 @@ import 'package:youtube_headless_player/src/ui/views/youtube_webview.dart';
 /// - Set [handleFullscreen] to `false` to manage the fullscreen layout
 ///   yourself; keep the player in a [KeyedSubtree] with a [GlobalKey] so
 ///   your layout swap reparents it instead of recreating the WebView.
-class YoutubePlayer extends StatefulWidget {
-  /// Creates a player for [controller].
-  const YoutubePlayer({
-    required this.controller,
-    this.fit = BoxFit.contain,
-    this.aspectRatio,
-    this.placeholder,
-    this.loadingWidget,
-    this.backgroundColor = Colors.black,
-    this.onReady,
-    this.showControls = true,
-    this.controls,
-    this.handleFullscreen = true,
-    super.key,
-  });
-
-  /// The standard 16:9 video aspect ratio.
-  static const double defaultAspectRatio = 16 / 9;
-
+class const YoutubePlayer({
   /// The controller driving this player.
-  final YoutubePlayerController controller;
+  required final YoutubePlayerController controller,
 
   /// How the video surface is inscribed into the widget's bounds
   /// (e.g. [BoxFit.cover] crops instead of letterboxing).
-  final BoxFit fit;
+  final BoxFit fit = BoxFit.contain,
 
   /// The aspect ratio of the widget itself.
   ///
   /// Defaults to the controller's `videoAspectRatio`, so a portrait video
   /// renders portrait inline too.
-  final double? aspectRatio;
+  final double? aspectRatio,
 
   /// Shown instead of the video until the player is ready
   /// (e.g. a thumbnail). Takes precedence over [loadingWidget].
-  final Widget? placeholder;
+  final Widget? placeholder,
 
   /// Shown centered on top of the surface until the player is ready.
   /// Defaults to a [CircularProgressIndicator].
-  final Widget? loadingWidget;
+  final Widget? loadingWidget,
 
   /// Color painted behind and around the video surface.
-  final Color backgroundColor;
+  final Color backgroundColor = Colors.black,
 
   /// Called exactly once when the player becomes ready.
-  final VoidCallback? onReady;
+  final VoidCallback? onReady,
 
   /// Whether the built-in control overlay is rendered on top of the video.
-  final bool showControls;
+  final bool showControls = true,
 
   /// Replaces the default [YoutubeControls] overlay when provided
   /// (ignored if [showControls] is `false`).
-  final Widget? controls;
+  final Widget? controls,
 
   /// Whether the player manages fullscreen itself by pushing a fullscreen
   /// page on the root navigator when `value.isFullscreen` becomes `true`.
   ///
   /// Set to `false` to control the fullscreen layout manually.
-  final bool handleFullscreen;
+  final bool handleFullscreen = true,
+  super.key,
+}) extends StatefulWidget {
+  /// Creates a player for [controller].
+  this;
+
+  /// The standard 16:9 video aspect ratio.
+  static const double defaultAspectRatio = 16 / 9;
 
   @override
   State<YoutubePlayer> createState() => _YoutubePlayerState();
@@ -295,17 +284,11 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
 
 /// Sizes the video surface inside the available bounds according to a
 /// [BoxFit] and the video's [videoAspectRatio].
-class _FittedVideoSurface extends StatelessWidget {
-  const _FittedVideoSurface({
-    required this.fit,
-    required this.videoAspectRatio,
-    required this.child,
-  });
-
-  final BoxFit fit;
-  final double videoAspectRatio;
-  final Widget child;
-
+class const _FittedVideoSurface({
+  required final BoxFit fit,
+  required final double videoAspectRatio,
+  required final Widget child,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(

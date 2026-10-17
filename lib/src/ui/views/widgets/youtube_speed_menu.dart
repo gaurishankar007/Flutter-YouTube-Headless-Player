@@ -5,19 +5,16 @@ import 'package:youtube_headless_player/src/core/constants/youtube_playback_rate
 import 'package:youtube_headless_player/src/ui/controllers/youtube_player_controller.dart';
 
 /// Playback speed selector.
-class YoutubeSpeedMenu extends StatelessWidget {
-  /// Creates a speed menu bound to [controller].
-  const YoutubeSpeedMenu({
-    required this.controller,
-    this.color = Colors.white,
-    super.key,
-  });
-
+class const YoutubeSpeedMenu({
   /// The controller to observe and act on.
-  final YoutubePlayerController controller;
+  required final YoutubePlayerController controller,
 
   /// Icon color.
-  final Color color;
+  final Color color = Colors.white,
+  super.key,
+}) extends StatelessWidget {
+  /// Creates a speed menu bound to [controller].
+  this;
 
   @override
   Widget build(BuildContext context) {

@@ -2,16 +2,13 @@
 ///
 /// Holds YouTube URLs in different forms on purpose (bare id, `youtu.be`,
 /// `embed`) to exercise the package's URL parsing.
-class DemoVideo {
-  /// Creates a demo video entry.
-  const DemoVideo(this.url, this.title);
-
+class const DemoVideo(
   /// Any YouTube URL form, or a bare video id.
-  final String url;
+  final String url,
 
   /// Human-readable title shown in the video list.
-  final String title;
-}
+  final String title,
+);
 
 /// Videos shared by every demo screen.
 const List<DemoVideo> demoVideos = [

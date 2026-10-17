@@ -11,10 +11,7 @@ const int _maxLogEntries = 30;
 /// The built-in experience: one [YoutubePlayer] with its default controls,
 /// a video list that switches videos while keeping the position, and a
 /// live event log.
-class BuiltInControlsScreen extends StatefulWidget {
-  /// Creates the built-in controls demo.
-  const BuiltInControlsScreen({super.key});
-
+class const BuiltInControlsScreen({super.key}) extends StatefulWidget {
   @override
   State<BuiltInControlsScreen> createState() => _BuiltInControlsScreenState();
 }
@@ -130,17 +127,11 @@ class _BuiltInControlsScreenState extends State<BuiltInControlsScreen> {
   }
 }
 
-class _VideoTile extends StatelessWidget {
-  const _VideoTile({
-    required this.video,
-    required this.isCurrent,
-    required this.onTap,
-  });
-
-  final DemoVideo video;
-  final bool isCurrent;
-  final VoidCallback onTap;
-
+class const _VideoTile({
+  required final DemoVideo video,
+  required final bool isCurrent,
+  required final VoidCallback onTap,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(

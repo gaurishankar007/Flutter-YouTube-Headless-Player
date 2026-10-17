@@ -2,7 +2,10 @@
 ///
 /// Mirrors the `YT.PlayerState` constants of the IFrame Player API, plus
 /// [unknown] for the time before the player has reported anything.
-enum YoutubePlayerState {
+enum YoutubePlayerState(
+  /// The raw `YT.PlayerState` integer constant.
+  final int code,
+) {
   /// No state has been reported by the player yet.
   unknown(-2),
 
@@ -23,11 +26,6 @@ enum YoutubePlayerState {
 
   /// A video is cued and ready to play (`CUED`).
   cued(5);
-
-  const YoutubePlayerState(this.code);
-
-  /// The raw `YT.PlayerState` integer constant.
-  final int code;
 
   /// Resolves the state matching a raw IFrame API [code].
   ///

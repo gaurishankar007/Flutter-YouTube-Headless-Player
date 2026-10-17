@@ -3,19 +3,16 @@ import 'package:youtube_headless_player/src/core/utils/youtube_duration_formatte
 import 'package:youtube_headless_player/src/ui/controllers/youtube_player_controller.dart';
 
 /// Live `position / duration` label (e.g. `1:23 / 22:24`).
-class YoutubeTimeLabel extends StatelessWidget {
-  /// Creates a time label bound to [controller].
-  const YoutubeTimeLabel({
-    required this.controller,
-    this.style = const TextStyle(color: Colors.white, fontSize: 15),
-    super.key,
-  });
-
+class const YoutubeTimeLabel({
   /// The controller to observe.
-  final YoutubePlayerController controller;
+  required final YoutubePlayerController controller,
 
   /// Text style of the label.
-  final TextStyle style;
+  final TextStyle style = const TextStyle(color: Colors.white, fontSize: 15),
+  super.key,
+}) extends StatelessWidget {
+  /// Creates a time label bound to [controller].
+  this;
 
   @override
   Widget build(BuildContext context) {

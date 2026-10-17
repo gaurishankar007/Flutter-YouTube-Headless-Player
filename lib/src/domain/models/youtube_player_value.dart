@@ -9,77 +9,56 @@ import 'package:youtube_headless_player/src/domain/models/youtube_quality.dart';
 /// value itself is immutable, and `YoutubePlayerController` is the
 /// `ValueNotifier<YoutubePlayerValue>` that publishes change notifications.
 @immutable
-class YoutubePlayerValue {
-  /// Creates a state snapshot.
-  const YoutubePlayerValue({
-    this.isReady = false,
-    this.playerState = YoutubePlayerState.unknown,
-    this.videoId,
-    this.position = Duration.zero,
-    this.duration = Duration.zero,
-    this.bufferedFraction = 0,
-    this.volume = 100,
-    this.isMuted = false,
-    this.playbackRate = YoutubePlaybackRate.normal,
-    this.availablePlaybackRates = const [],
-    this.quality = YoutubeQuality.auto,
-    this.availableQualities = const [],
-    this.captionsEnabled = false,
-    this.isFullscreen = false,
-    this.errorCode,
-    this.errorMessage,
-    this.isPendingAutoplay = false,
-  });
-
+class const YoutubePlayerValue({
   /// Whether the underlying IFrame player finished initializing.
-  final bool isReady;
+  final bool isReady = false,
 
   /// The raw playback state reported by the player.
-  final YoutubePlayerState playerState;
+  final YoutubePlayerState playerState = YoutubePlayerState.unknown,
 
   /// The id of the currently loaded or cued video, if any.
-  final String? videoId;
+  final String? videoId,
 
   /// Current playback position.
-  final Duration position;
+  final Duration position = Duration.zero,
 
   /// Total duration of the current video ([Duration.zero] until known).
-  final Duration duration;
+  final Duration duration = Duration.zero,
 
   /// Fraction of the video that is buffered, from `0.0` to `1.0`.
-  final double bufferedFraction;
+  final double bufferedFraction = 0,
 
   /// Player volume, from `0` to `100`.
-  final int volume;
+  final int volume = 100,
 
   /// Whether the player is muted.
-  final bool isMuted;
+  final bool isMuted = false,
 
   /// Current playback rate (`1.0` is normal speed).
-  final double playbackRate;
+  final double playbackRate = YoutubePlaybackRate.normal,
 
   /// Playback rates supported by the current video.
-  final List<double> availablePlaybackRates;
+  final List<double> availablePlaybackRates = const [],
 
   /// Current playback quality.
-  final YoutubeQuality quality;
+  final YoutubeQuality quality = YoutubeQuality.auto,
 
   /// Quality levels available for the current video (empty until the
   /// player reports them, typically once playback starts).
-  final List<YoutubeQuality> availableQualities;
+  final List<YoutubeQuality> availableQualities = const [],
 
   /// Whether closed captions are enabled (they only render for videos
   /// that provide or auto-generate a caption track).
-  final bool captionsEnabled;
+  final bool captionsEnabled = false,
 
   /// Whether Flutter-side fullscreen mode is active.
-  final bool isFullscreen;
+  final bool isFullscreen = false,
 
   /// The last error code, or `null` when no error occurred.
-  final int? errorCode;
+  final int? errorCode,
 
   /// The last error message, or `null` when no error occurred.
-  final String? errorMessage;
+  final String? errorMessage,
 
   /// Whether an autoplay is currently in flight and hasn't yet been
   /// confirmed by a `playing`, `paused`, or error event.
@@ -94,7 +73,10 @@ class YoutubePlayerValue {
   /// autoplaying video is still loading (both the very first video and
   /// any subsequent one loaded into the same player), which otherwise
   /// looks identical to a user-paused video.
-  final bool isPendingAutoplay;
+  final bool isPendingAutoplay = false,
+}) {
+  /// Creates a state snapshot.
+  this;
 
   /// Whether the video is currently playing.
   bool get isPlaying => playerState == YoutubePlayerState.playing;

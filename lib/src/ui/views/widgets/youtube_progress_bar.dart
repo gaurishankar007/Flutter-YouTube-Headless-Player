@@ -8,39 +8,31 @@ import 'package:youtube_headless_player/src/ui/models/youtube_progress_bar_color
 ///
 /// Dragging previews the target position immediately and issues a single
 /// seek when the gesture ends, keeping bridge traffic minimal.
-class YoutubeProgressBar extends StatefulWidget {
-  /// Creates a progress bar bound to [controller].
-  const YoutubeProgressBar({
-    required this.controller,
-    this.colors = const YoutubeProgressBarColors(),
-    this.height = 24,
-    this.trackHeight = 3,
-    this.thumbRadius = 6,
-    this.onDragStart,
-    this.onDragEnd,
-    super.key,
-  });
-
+class const YoutubeProgressBar({
   /// The controller to observe and seek on.
-  final YoutubePlayerController controller;
+  required final YoutubePlayerController controller,
 
   /// Colors of the track segments and thumb.
-  final YoutubeProgressBarColors colors;
+  final YoutubeProgressBarColors colors = const YoutubeProgressBarColors(),
 
   /// Total hit-test height of the bar.
-  final double height;
+  final double height = 24,
 
   /// Painted height of the track.
-  final double trackHeight;
+  final double trackHeight = 3,
 
   /// Radius of the thumb circle.
-  final double thumbRadius;
+  final double thumbRadius = 6,
 
   /// Called when a scrub gesture starts (e.g. to pin the controls open).
-  final VoidCallback? onDragStart;
+  final VoidCallback? onDragStart,
 
   /// Called when a scrub gesture ends.
-  final VoidCallback? onDragEnd;
+  final VoidCallback? onDragEnd,
+  super.key,
+}) extends StatefulWidget {
+  /// Creates a progress bar bound to [controller].
+  this;
 
   @override
   State<YoutubeProgressBar> createState() => _YoutubeProgressBarState();
@@ -174,25 +166,16 @@ class _YoutubeProgressBarState extends State<YoutubeProgressBar> {
   }
 }
 
-class _ProgressBarPainter extends CustomPainter {
-  const _ProgressBarPainter({
-    required this.playedFraction,
-    required this.bufferedFraction,
-    required this.colors,
-    required this.trackHeight,
-    required this.thumbRadius,
-    required this.isScrubbing,
-  });
-
+class const _ProgressBarPainter({
+  required final double playedFraction,
+  required final double bufferedFraction,
+  required final YoutubeProgressBarColors colors,
+  required final double trackHeight,
+  required final double thumbRadius,
+  required final bool isScrubbing,
+}) extends CustomPainter {
   /// Extra thumb growth while scrubbing, for a subtle grab affordance.
   static const double _scrubThumbScale = 1.35;
-
-  final double playedFraction;
-  final double bufferedFraction;
-  final YoutubeProgressBarColors colors;
-  final double trackHeight;
-  final double thumbRadius;
-  final bool isScrubbing;
 
   @override
   void paint(Canvas canvas, Size size) {

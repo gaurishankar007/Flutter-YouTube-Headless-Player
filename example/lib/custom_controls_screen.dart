@@ -18,10 +18,7 @@ const Duration _seekStep = Duration(seconds: 10);
 /// A custom UI: the default overlay is replaced with one composed from the
 /// package's standalone control widgets, and the player is also driven by
 /// plain buttons through the controller.
-class CustomControlsScreen extends StatefulWidget {
-  /// Creates the custom controls demo.
-  const CustomControlsScreen({super.key});
-
+class const CustomControlsScreen({super.key}) extends StatefulWidget {
   @override
   State<CustomControlsScreen> createState() => _CustomControlsScreenState();
 }
@@ -71,11 +68,8 @@ class _CustomControlsScreenState extends State<CustomControlsScreen> {
 
 /// An overlay assembled from standalone widgets: gestures, seek bar,
 /// play/pause, time, captions, speed, volume and fullscreen.
-class _CustomOverlay extends StatelessWidget {
-  const _CustomOverlay({required this.controller});
-
-  final YoutubePlayerController controller;
-
+class const _CustomOverlay({required final YoutubePlayerController controller})
+    extends StatelessWidget {
   void _togglePlayPause() {
     unawaited(
       controller.value.isPlaying ? controller.pause() : controller.play(),
@@ -156,11 +150,8 @@ class _CustomOverlay extends StatelessWidget {
 }
 
 /// Plain buttons calling the controller directly.
-class _CommandPanel extends StatelessWidget {
-  const _CommandPanel({required this.controller});
-
-  final YoutubePlayerController controller;
-
+class const _CommandPanel({required final YoutubePlayerController controller})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -233,11 +224,8 @@ class _CommandPanel extends StatelessWidget {
 }
 
 /// A live readout of [YoutubePlayerValue].
-class _StatePanel extends StatelessWidget {
-  const _StatePanel({required this.controller});
-
-  final YoutubePlayerController controller;
-
+class const _StatePanel({required final YoutubePlayerController controller})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
