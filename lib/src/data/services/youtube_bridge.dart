@@ -124,7 +124,7 @@ class YoutubeBridge {
     // `jsonEncode` output is a valid JavaScript object literal, so the
     // command travels as data — never as interpolated code fragments.
     final payload = jsonEncode(command.toJson());
-    return webViewController.evaluateJavascript(
+    return await webViewController.evaluateJavascript(
       source:
           'window.youtubeHeadlessPlayer && window.youtubeHeadlessPlayer.dispatch($payload)',
     );

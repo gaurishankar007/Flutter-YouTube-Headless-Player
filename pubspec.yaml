@@ -10,7 +10,7 @@ issue_tracker: https://github.com/gaurishankar007/Flutter-YouTube-Headless-Playe
 
 environment:
   sdk: ">=3.10.0 <4.0.0"
-  flutter: ">=3.35.0"
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
@@ -23,7 +23,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  leancode_lint: ^24.0.0
+  leancode_lint: ^27.0.0
 
 flutter:
   assets:
