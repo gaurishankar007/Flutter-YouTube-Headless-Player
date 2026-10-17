@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:youtube_headless_player/src/data/services/platform/youtube_web_events_stub.dart'
-    if (dart.library.js_interop) 'package:youtube_headless_player/src/data/services/platform/youtube_web_events_web.dart';
+import 'package:youtube_headless_player/src/data/services/youtube_engine_transport.dart';
 import 'package:youtube_headless_player/src/domain/models/youtube_player_event.dart';
 import 'package:youtube_headless_player/src/domain/models/youtube_quality.dart';
 
@@ -11,7 +7,7 @@ import 'package:youtube_headless_player/src/domain/models/youtube_quality.dart';
 ///
 /// Commands are dispatched through one JavaScript entry point
 /// (`window.youtubeHeadlessPlayer.dispatch(...)`), so no raw JavaScript is
-/// generated per action anywhere else in the package.
+/// generated per action anywhere in the package.
 @internal
 @immutable
 class const YoutubeCommand(
@@ -30,16 +26,14 @@ class const YoutubeCommand(
 
 /// Bidirectional bridge between Dart and the JavaScript playback engine.
 ///
-/// - Flutter → JavaScript: [send] serializes a [YoutubeCommand] to JSON and
-///   evaluates a single `dispatch` call.
-/// - JavaScript → Flutter: a `callHandler` channel delivers structured JSON
-///   events, which are decoded into typed [YoutubePlayerEvent]s.
+/// Independent of how the engine is hosted:
+/// - Flutter → JavaScript: [send] hands a [YoutubeCommand]'s JSON payload to
+///   the attached [YoutubeEngineTransport].
+/// - JavaScript → Flutter: the engine view passes every structured JSON
+///   payload to [receive], which decodes it into a typed
+///   [YoutubePlayerEvent].
 @internal
 class YoutubeBridge {
-  /// Name of the JavaScript handler the engine posts events to. Must match
-  /// `EVENT_CHANNEL` in `assets/youtube/player.js`.
-  static const String eventChannelName = 'YoutubePlayerEvents';
-
   static int _instanceCount = 0;
 
   /// Unique id of this bridge instance.
@@ -49,85 +43,53 @@ class YoutubeBridge {
   /// page never receive each other's events.
   final String playerId = 'ytp${_instanceCount++}';
 
-  InAppWebViewController? _webViewController;
+  YoutubeEngineTransport? _transport;
+  ValueChanged<YoutubePlayerEvent>? _onEvent;
+  VoidCallback? _onPageReady;
 
-  /// Whether a WebView is currently attached.
-  bool get isAttached => _webViewController != null;
+  /// Whether an engine is currently attached.
+  bool get isAttached => _transport != null;
 
-  /// Attaches the bridge to a freshly created WebView and starts routing
-  /// engine events to [onEvent].
+  /// Attaches the bridge to a freshly created engine and starts routing its
+  /// events to [onEvent].
   ///
   /// [onPageReady] fires on every `pageReady` announcement the engine emits
   /// while waiting to be initialized; the owner responds by (re-)sending the
   /// idempotent `initialize` command, which makes startup immune to races
   /// between page load callbacks and script evaluation.
-  ///
-  /// `player.js` prefers `window.flutter_inappwebview.callHandler` whenever
-  /// it exists and only falls back to posting a `message` to the parent
-  /// window otherwise. The bundled `flutter_inappwebview_web` version
-  /// injects a working `callHandler` shim into the iframe on Flutter Web
-  /// too (same-origin, javascript bridge enabled by default), so the
-  /// JavaScript handler is registered on every platform here - registering
-  /// it only for non-web would silently lose every event on web, since
-  /// `player.js` would keep calling a handler nothing is listening for and
-  /// never fall through to `postMessage`. The `message` listener stays
-  /// registered on web too as a fallback for setups where the shim isn't
-  /// available (e.g. a cross-origin iframe, or an older package version).
   void attach(
-    InAppWebViewController webViewController, {
+    YoutubeEngineTransport transport, {
     required ValueChanged<YoutubePlayerEvent> onEvent,
     required VoidCallback onPageReady,
   }) {
-    _webViewController = webViewController;
-    void handlePayload(Map<String, Object?> payload) {
-      if (payload['event'] == 'pageReady') {
-        onPageReady();
-        return;
-      }
-      final event = decodeEvent(payload);
-      if (event != null) {
-        onEvent(event);
-      }
-    }
-
-    if (kIsWeb) {
-      registerYoutubeWebEventListener(playerId, handlePayload);
-    }
-    webViewController.addJavaScriptHandler(
-      handlerName: eventChannelName,
-      callback: (arguments) {
-        final payload = arguments.isNotEmpty ? arguments.first : null;
-        if (payload is Map) {
-          handlePayload(Map<String, Object?>.from(payload));
-        }
-        return null;
-      },
-    );
+    _transport = transport;
+    _onEvent = onEvent;
+    _onPageReady = onPageReady;
   }
 
-  /// Detaches the bridge from the WebView (e.g. when the widget is removed
-  /// from the tree). Pending [send] calls become no-ops.
+  /// Detaches the bridge from the engine (e.g. when the engine view is
+  /// removed from the tree). Pending [send] calls become no-ops.
   void detach() {
-    if (kIsWeb) {
-      unregisterYoutubeWebEventListener(playerId);
-    }
-    _webViewController = null;
+    _transport = null;
+    _onEvent = null;
+    _onPageReady = null;
   }
 
-  /// Sends a [command] to the JavaScript dispatcher and returns its result
-  /// (used by getter-style commands; `null` for fire-and-forget actions).
-  Future<Object?> send(YoutubeCommand command) async {
-    final webViewController = _webViewController;
-    if (webViewController == null) {
-      return null;
+  /// Handles a JSON [payload] posted by the engine.
+  void receive(Map<String, Object?> payload) {
+    if (payload['event'] == 'pageReady') {
+      _onPageReady?.call();
+      return;
     }
-    // `jsonEncode` output is a valid JavaScript object literal, so the
-    // command travels as data — never as interpolated code fragments.
-    final payload = jsonEncode(command.toJson());
-    return await webViewController.evaluateJavascript(
-      source:
-          'window.youtubeHeadlessPlayer && window.youtubeHeadlessPlayer.dispatch($payload)',
-    );
+    final event = decodeEvent(payload);
+    if (event != null) {
+      _onEvent?.call(event);
+    }
+  }
+
+  /// Sends a [command] to the JavaScript dispatcher.
+  Future<void> send(YoutubeCommand command) async {
+    await _transport?.dispatch(command.toJson());
   }
 
   /// Decodes a structured JSON event coming from `player.js` into a typed

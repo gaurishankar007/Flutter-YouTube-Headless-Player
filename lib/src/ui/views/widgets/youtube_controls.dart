@@ -53,9 +53,9 @@ class const YoutubeControls({
 
   /// Whether the volume control is shown in the bottom bar.
   ///
-  /// Defaults to web only: on Android/iOS volume belongs to the hardware
-  /// buttons (like the YouTube mobile app), so no button is rendered there.
-  final bool showVolumeSlider = kIsWeb,
+  /// On iOS it is a mute/unmute button only, since WebKit ignores volume
+  /// changes there (see [YoutubeVolumeSlider.showSlider]).
+  final bool showVolumeSlider = true,
 
   /// Whether a play/pause button is shown in the bottom bar (below the
   /// progress bar).

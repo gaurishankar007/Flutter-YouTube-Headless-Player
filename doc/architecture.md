@@ -21,9 +21,9 @@ YoutubePlayer (widget)                      src/ui/views/
 YoutubePlayerController                     src/ui/controllers/
     ↓  JSON commands            ↑ typed events
 YoutubeBridge                               src/data/services/
-    ↓
-flutter_inappwebview
-    ↓
+    ↓  YoutubeEngineTransport
+YoutubeEngineView                           src/ui/views/engine/
+    ↓  webview_flutter (Android/iOS/macOS) · <iframe> (web)
 Minimal HTML (<div id="player"> only)       assets/youtube/index.html
     ↓
 player.js (window.youtubeHeadlessPlayer)    assets/youtube/player.js
@@ -41,6 +41,9 @@ YouTube IFrame API
   paused/buffering/ended, keeping bridge traffic minimal.
 - Commands issued before the player is ready are queued and flushed on
   `ready`.
+- The engine view is picked by a conditional import
+  (`if (dart.library.js_interop)`), so nothing on the web path imports
+  `webview_flutter` — which keeps the package WASM-ready.
 
 ---
 
@@ -55,6 +58,7 @@ lib/
 └── src/
     ├── core/                              # dependency-free shared primitives
     │   ├── constants/
+    │   │   ├── youtube_engine_assets.dart        # engine asset paths + channel names
     │   │   ├── youtube_playback_rate.dart        # canonical playback rates + labels
     │   │   └── youtube_thumbnail_quality.dart    # thumbnail resolutions
     │   └── utils/
@@ -70,12 +74,8 @@ lib/
     │       └── youtube_quality.dart       # quality levels + wire codes
     ├── data/                              # engine transport layer
     │   └── services/
-    │       ├── youtube_bridge.dart        # JSON command dispatch + event decode
-    │       └── platform/
-    │           ├── youtube_web_assets_stub.dart  # no-op on Android/iOS
-    │           ├── youtube_web_assets_web.dart   # engine asset URL resolver (web)
-    │           ├── youtube_web_events_stub.dart  # no-op on Android/iOS
-    │           └── youtube_web_events_web.dart   # postMessage listener (web)
+    │       ├── youtube_bridge.dart            # JSON command dispatch + event decode
+    │       └── youtube_engine_transport.dart  # how commands reach the engine
     └── ui/                                # everything visual & stateful
         ├── controllers/
         │   ├── youtube_player_controller.dart    # public ValueNotifier API
@@ -84,7 +84,9 @@ lib/
         │   └── youtube_progress_bar_colors.dart  # UI-only styling model
         └── views/
             ├── youtube_player.dart        # the video surface widget
-            ├── youtube_webview.dart       # headless InAppWebView host
+            ├── engine/
+            │   ├── youtube_engine_view_native.dart  # webview_flutter host (Android/iOS/macOS)
+            │   └── youtube_engine_view_web.dart     # same-origin <iframe> host (web)
             └── widgets/                   # one control per file
                 ├── youtube_captions_button.dart
                 ├── youtube_controls.dart
@@ -106,8 +108,8 @@ assets/youtube/
 Layering rules: `core` depends on nothing, `domain` only on `core`, `data`
 on `domain`/`core`, and `ui` may use all of them. Only the barrel
 (`youtube_headless_player.dart`) is public API; `youtube_bridge.dart`,
-`youtube_controller_impl.dart`, `youtube_webview.dart` and the platform
-files are internal and not exported.
+`youtube_controller_impl.dart`, the transport and the engine views are
+internal and not exported.
 
 ---
 
@@ -135,12 +137,12 @@ Robustness details:
   applies commands asynchronously, so read-backs lie for a few hundred ms)
   and a drift check on each progress tick reconciles with reality.
 
-### `src/data/services/youtube_bridge.dart` — the transport
+### `src/data/services/youtube_bridge.dart` — the bridge
 
-Serializes `YoutubeCommand` objects to JSON and evaluates a single
-`dispatch(...)` call; decodes incoming JSON payloads into the typed
-`YoutubePlayerEvent` hierarchy. Also owns the per-instance `playerId` used
-to route events when multiple players exist on one page.
+Independent of how the engine is hosted. Hands `YoutubeCommand` JSON to
+the attached `YoutubeEngineTransport` and decodes incoming JSON payloads
+into the typed `YoutubePlayerEvent` hierarchy. Also owns the per-instance
+`playerId` used to route events when multiple players exist on one page.
 
 ### `src/ui/controllers/` — state management
 
@@ -155,16 +157,27 @@ while a seek is in flight, stale progress reports cannot move the position
 until the engine lands within 2 s of the target (5 s timeout). That is why
 the scrubber never snaps back, just like real YouTube.
 
-### `src/ui/views/youtube_webview.dart` — the WebView host
+### `src/ui/views/engine/` — the engine hosts
 
-Configures `InAppWebView` (inline playback, no user-gesture requirement, no
-zoom/scroll, context menu disabled), loads the engine document per
-platform (see [Platform differences](#platform-differences)), enforces the
-navigation allowlist and blocks popups.
+Both files declare `YoutubeEngineView` and implement
+`YoutubeEngineTransport`; `youtube_player.dart` picks one with a
+conditional import.
+
+- **Native** (`webview_flutter`): inline playback without a user gesture
+  (`WebKitWebViewControllerCreationParams` /
+  `AndroidWebViewController`), zoom and back/forward gestures off, the
+  engine document loaded with `loadHtmlString`, events received through a
+  `JavaScriptChannel`, and a `NavigationDelegate` enforcing the allowlist.
+- **Web** (no plugin): an `<iframe>` created with
+  `HtmlElementView.fromTagName`, pointing at the engine document on the
+  app's own origin. Commands call the engine's `dispatch` directly through
+  `dart:js_interop`; events arrive as `postMessage`.
+
+See [Platform differences](#platform-differences) for details.
 
 ### `src/ui/views/youtube_player.dart` — the all-in-one widget
 
-Wraps the WebView in `IgnorePointer` inside an `AspectRatio` (default
+Wraps the engine view in `IgnorePointer` inside an `AspectRatio` (default
 16:9), applies `BoxFit` via `applyBoxFit`, shows a placeholder/loading
 widget until the `ready` event arrives, and layers the `YoutubeControls`
 overlay on top.
@@ -200,16 +213,16 @@ countdown.
 
 ## Platform differences
 
-| Concern | Android / iOS | Web |
+| Concern | Android / iOS / macOS | Web |
 |---|---|---|
-| Engine document loading | `index.html` + `player.js` are read from assets, the script tag is inlined, and the document is loaded via `loadData` with base URL `https://youtube-nocookie.com`, giving the engine a YouTube origin (required for embed-restricted videos) | The asset is loaded **by URL** from the app's own origin (resolved against the document's `<base href>`, not the current route), so the relative `player.js` reference and same-origin iframe access both work |
+| Engine document loading | `index.html` + `player.js` are read from assets, the script tag is inlined, and the document is loaded via `loadHtmlString` with base URL `https://youtube-nocookie.com`, giving the engine a YouTube origin (required for embed-restricted videos) | The asset is loaded **by URL** from the app's own origin (resolved against the document's `<base href>`, not the current route), so the relative `player.js` reference and same-origin iframe access both work |
 | `origin` player var | **Omitted** — echoing the spoofed base URL back to the API triggers "Video unavailable" embed errors (150/152/153) | Set to the real app origin |
-| JS → Flutter events | `window.flutter_inappwebview.callHandler(...)` (native JS handler) | The web platform does not implement JS handlers, so the engine posts JSON strings to the parent window via `postMessage`, tagged with a `playerId` query parameter; a `dart:js_interop` listener (conditional import) decodes them |
-| Flutter → JS commands | `evaluateJavascript` (native) | `evaluateJavascript` via the plugin's `web_support.js` — **must be included in the app's `web/index.html`** |
-| Pointer isolation | The WebView is wrapped in `IgnorePointer` | Additionally, the engine page sets `pointer-events: none` on its own hosting iframe — otherwise the DOM iframe would swallow clicks before Flutter ever saw them |
-| Navigation interception | `shouldOverrideUrlLoading` allowlist + popup blocking | Not supported by the platform; the iframe `allow` list is restricted instead |
-| Fullscreen side effects | `SystemChrome`: immersive-sticky UI + forced landscape, restored on exit | No system chrome — the app just reacts to `value.isFullscreen` by expanding the layout; the browser fullscreen API is never used |
-| Default controls layout | No volume control (hardware buttons), no bottom play/pause (center button only) — like the YouTube mobile app | Volume with hover-reveal slider + bottom play/pause — like the YouTube web player |
+| JS → Flutter events | JSON strings through the `YoutubePlayerEvents` `JavaScriptChannel` | JSON strings posted to the parent window via `postMessage`, tagged with a `playerId` query parameter and filtered by a `dart:js_interop` listener |
+| Flutter → JS commands | `runJavaScript` evaluating one `dispatch(...)` call | Direct call to `dispatch` on the same-origin iframe's `window` through `dart:js_interop` — no setup in the app's `web/index.html` |
+| Pointer isolation | The WebView is wrapped in `IgnorePointer` | Additionally, the iframe gets `pointer-events: none` — otherwise the DOM iframe would swallow clicks before Flutter ever saw them |
+| Navigation interception | `NavigationDelegate` allowlist; main-frame navigations (including `window.open`) are cancelled | Not supported by the platform; the iframe `allow` list is restricted instead |
+| Fullscreen side effects | `SystemChrome`: immersive-sticky UI + forced landscape, restored on exit (no effect on a macOS window) | No system chrome — the app just reacts to `value.isFullscreen` by expanding the layout; the browser fullscreen API is never used |
+| Default controls layout | No bottom play/pause (center button only) — like the YouTube mobile app. Volume button with a tap-revealed slider; on iOS mute/unmute only, since WebKit ignores volume changes | Volume with hover-reveal slider + bottom play/pause — like the YouTube web player. Mute/unmute only in Safari on iOS |
 | Keyboard shortcuts | Inert | Active |
 
 ---

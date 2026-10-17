@@ -96,7 +96,6 @@ class _MinimalPlayerState extends State<MinimalPlayer> {
   final _controller = YoutubePlayerController.fromUrl(
     'https://youtu.be/kfhcWQpl9v4', // any YouTube URL form, or a bare id
     autoPlay: true,
-    startMuted: true, // needed for reliable autoplay under browser policies
   );
 
   @override

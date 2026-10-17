@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:material_ui/material_ui.dart';
 import 'package:youtube_headless_player/src/domain/models/youtube_player_event.dart';
 import 'package:youtube_headless_player/src/ui/controllers/youtube_player_controller.dart';
+import 'package:youtube_headless_player/src/ui/views/engine/youtube_engine_view_native.dart'
+    if (dart.library.js_interop) 'package:youtube_headless_player/src/ui/views/engine/youtube_engine_view_web.dart';
 import 'package:youtube_headless_player/src/ui/views/widgets/youtube_controls.dart';
-import 'package:youtube_headless_player/src/ui/views/youtube_webview.dart';
 
 /// The all-in-one YouTube player widget.
 ///
@@ -248,7 +249,7 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
                   // The WebView is a pure playback surface — it must never
                   // receive pointers; Flutter owns every gesture.
                   child: IgnorePointer(
-                    child: YoutubeWebView(controller: widget.controller),
+                    child: YoutubeEngineView(controller: widget.controller),
                   ),
                 ),
                 ValueListenableBuilder(

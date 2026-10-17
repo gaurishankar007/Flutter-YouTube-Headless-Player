@@ -1,9 +1,10 @@
-/// A fully custom YouTube player built on `flutter_inappwebview` and the
-/// official YouTube IFrame Player API.
+/// A fully custom YouTube player built on the official YouTube IFrame
+/// Player API, hosted in `webview_flutter` on Android/iOS/macOS and in a
+/// plain iframe on web.
 ///
-/// The WebView is a headless playback engine — Flutter renders 100% of the
-/// user interface. See `YoutubePlayer`, `YoutubePlayerController` and
-/// `YoutubeControls` for the main entry points.
+/// The engine is headless — Flutter renders 100% of the user interface.
+/// See `YoutubePlayer`, `YoutubePlayerController` and `YoutubeControls` for
+/// the main entry points.
 library;
 
 export 'package:youtube_headless_player/src/core/constants/youtube_playback_rate.dart';

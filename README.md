@@ -7,9 +7,9 @@
 
 ---
 
-A YouTube player for Flutter whose interface is built entirely in Flutter. Use the ready-made YouTube-style controls, or build your own from scratch. Works the same way on Android, iOS and Web. macOS and Windows are supported by the underlying WebView but haven't been tested yet.
+A YouTube player for Flutter whose interface is built entirely in Flutter. Use the ready-made YouTube-style controls, or build your own from scratch. Works the same way on Android, iOS and Web. macOS is supported too but hasn't been tested yet.
 
-Video playback runs in a hidden WebView through the official [YouTube IFrame Player API](https://developers.google.com/youtube/iframe_api_reference), but viewers never touch it: every button, slider, gesture and menu is a Flutter widget you can style, rearrange or replace.
+Video playback runs in a hidden WebView (a plain iframe on web) through the official [YouTube IFrame Player API](https://developers.google.com/youtube/iframe_api_reference), but viewers never touch it: every button, slider, gesture and menu is a Flutter widget you can style, rearrange or replace.
 
 **Use it when you want to:**
 
@@ -26,7 +26,7 @@ Video playback runs in a hidden WebView through the official [YouTube IFrame Pla
 - Change playback speed (0.25×–2×), volume and mute
 - Turn closed captions on or off for videos that have them
 - Get thumbnail URLs in five resolutions, WebP or JPEG, for previews and placeholders
-- YouTube-style controls out of the box: seek bar with buffering progress, play/pause, time label, speed menu, captions, volume and fullscreen buttons
+- YouTube-style controls out of the box: seek bar with buffering progress, play/pause, time label, speed menu, captions, volume and fullscreen buttons (mute/unmute only on iOS, which doesn't allow apps to change video volume)
 - Controls auto-hide while watching and stay visible while they are being used
 - Double-tap left/right to skip 10 seconds, double-tap center to play/pause
 - Keyboard shortcuts on web: <kbd>space</kbd>/<kbd>k</kbd> play-pause, arrow keys to seek and change volume, <kbd>m</kbd> mute, <kbd>f</kbd> fullscreen, <kbd>0</kbd>–<kbd>9</kbd> to jump through the video
@@ -42,25 +42,27 @@ Add the following line to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  youtube_headless_player: ^0.1.1
+  youtube_headless_player: ^0.2.0
 ```
 
-### Web
+No extra setup is needed on iOS or Web.
 
-Add the `flutter_inappwebview` web support script to your app's `web/index.html`. Without it, the player stays in the loading state:
+### Android
 
-```html
-<head>
-  ...
-  <script type="application/javascript"
-          src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js"
-          defer></script>
-</head>
+Release builds need the internet permission in `android/app/src/main/AndroidManifest.xml` (Flutter only adds it to debug builds):
+
+```xml
+<uses-permission android:name="android.permission.INTERNET"/>
 ```
 
-### Android / iOS
+### macOS
 
-No extra setup. Note that `flutter_inappwebview_android` 1.1.x requires AGP 8.x or older.
+Allow outgoing network connections by adding this key to both `macos/Runner/DebugProfile.entitlements` and `macos/Runner/Release.entitlements`:
+
+```xml
+<key>com.apple.security.network.client</key>
+<true/>
+```
 
 ## 🚀 Usage
 
@@ -80,7 +82,6 @@ class _VideoPageState extends State<VideoPage> {
   final controller = YoutubePlayerController.fromUrl(
     'https://youtu.be/dQw4w9WgXcQ', // any YouTube URL form, or a bare id
     autoPlay: true,
-    startMuted: true, // needed for reliable autoplay under browser policies
   );
 
   @override
@@ -163,7 +164,7 @@ Apps that lock orientations globally should set `YoutubeFullscreenManager.restor
 ### Good to know
 
 - **Quality selection** isn't supported by YouTube embeds anymore; quality is chosen adaptively, so the controls hide the quality menu by default.
-- **Autoplay** is subject to platform policies — combine `autoPlay: true` with `startMuted: true`.
+- **Autoplay** with sound works on Android and iOS. Browsers only allow it after the user has interacted with the page (e.g. tapped to open the video); otherwise the video waits for play. Pass `startMuted: true` for guaranteed autoplay on web; viewers can unmute with the volume button.
 - Videos whose owners disable embedding fail with error 101/150. That's a per-video restriction, not a player issue.
 
 A complete demo app (minimal setup, built-in controls with video switching and a live event log, and a fully custom UI built from the standalone widgets) lives in [`example/`](https://github.com/gaurishankar007/Flutter-YouTube-Headless-Player/tree/main/example).

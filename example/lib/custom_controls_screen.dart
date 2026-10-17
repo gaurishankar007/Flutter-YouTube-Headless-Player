@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:youtube_headless_player/youtube_headless_player.dart';
 
@@ -133,7 +132,7 @@ class const _CustomOverlay({required final YoutubePlayerController controller})
                       const SizedBox(width: 4),
                       YoutubeTimeLabel(controller: controller),
                       const Spacer(),
-                      if (kIsWeb) YoutubeVolumeSlider(controller: controller),
+                      YoutubeVolumeSlider(controller: controller),
                       YoutubeCaptionsButton(controller: controller),
                       YoutubeSpeedMenu(controller: controller),
                       YoutubeFullscreenButton(controller: controller),

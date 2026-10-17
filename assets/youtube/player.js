@@ -6,8 +6,9 @@
  *   - Load the IFrame API script lazily and create a chrome-less player.
  *   - Receive JSON commands from Flutter through a single dispatcher
  *     (`window.youtubeHeadlessPlayer.dispatch({action, ...params})`).
- *   - Push structured JSON events to Flutter through
- *     `window.flutter_inappwebview.callHandler(...)` — never plain strings.
+ *   - Push structured JSON events to Flutter — the `webview_flutter`
+ *     JavaScript channel on native, `postMessage` on web — never plain
+ *     strings.
  *   - Emit progress events every 250 ms while playing, and stop while
  *     paused / buffering / ended.
  *
@@ -20,7 +21,7 @@
 (() => {
   'use strict';
 
-  /** Name of the Flutter-side JavaScript handler receiving player events. */
+  /** Name of the Flutter-side JavaScript channel receiving player events. */
   const EVENT_CHANNEL = 'YoutubePlayerEvents';
 
   /** Interval between progress events while the video is playing. */
@@ -64,10 +65,11 @@
    * Every payload is a plain object with a mandatory `event` field, e.g.
    * `{event: 'progress', position: 12.3, duration: 100, buffered: 0.44}`.
    *
-   * On Android/iOS events travel through the inappwebview JavaScript
-   * handler. On Flutter Web that handler is not available, so events are
-   * posted to the parent window as JSON strings tagged with this player's
-   * instance id (taken from the `playerId` query parameter).
+   * On Android/iOS/macOS events travel as JSON strings through the
+   * `webview_flutter` JavaScript channel. On Flutter Web the engine runs in
+   * an iframe instead, so events are posted to the parent window as JSON
+   * strings tagged with this player's instance id (taken from the
+   * `playerId` query parameter).
    */
   class EventChannel {
     constructor() {
@@ -84,9 +86,9 @@
      */
     post(event, data = {}) {
       const payload = Object.assign({ event }, data);
-      const bridge = window.flutter_inappwebview;
-      if (bridge && typeof bridge.callHandler === 'function') {
-        bridge.callHandler(EVENT_CHANNEL, payload);
+      const channel = window[EVENT_CHANNEL];
+      if (channel && typeof channel.postMessage === 'function') {
+        channel.postMessage(JSON.stringify(payload));
         return;
       }
       if (window.parent && window.parent !== window) {
@@ -513,7 +515,7 @@
         playerVars.playlist = config.videoId;
       }
       // Pass the page origin only when it is a genuine application origin
-      // (Flutter Web). On Android/iOS the document is loaded under a
+      // (Flutter Web). On Android/iOS/macOS the document is loaded under a
       // YouTube base URL, and echoing that spoofed origin back to the API
       // makes YouTube reject playback with embed errors (150/152/153).
       const origin = window.location.origin;
@@ -918,8 +920,8 @@
    * captures every pointer event over the video, so the Flutter controls
    * painted on top never receive taps. The player must never be interacted
    * with directly (Flutter owns 100% of the UI), so the hosting iframe is
-   * made fully transparent to pointer events. No-op on Android/iOS, where
-   * the document is the top-level frame.
+   * made fully transparent to pointer events. No-op on Android/iOS/macOS,
+   * where the document is the top-level frame.
    */
   const disableHostFramePointerEvents = () => {
     try {

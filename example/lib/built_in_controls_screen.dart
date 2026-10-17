@@ -24,11 +24,7 @@ class _BuiltInControlsScreenState extends State<BuiltInControlsScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = .fromUrl(
-      demoVideos.first.url,
-      autoPlay: true,
-      startMuted: true,
-    );
+    _controller = .fromUrl(demoVideos.first.url, autoPlay: true);
     _eventSubscription = _controller.events.listen(_logEvent);
   }
 

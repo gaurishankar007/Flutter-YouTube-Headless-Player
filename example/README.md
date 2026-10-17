@@ -26,7 +26,4 @@ flutter run -d chrome   # web
 flutter run             # connected Android/iOS device
 ```
 
-Note: `web/index.html` includes the required
-`flutter_inappwebview_web` support script, and
-`android/settings.gradle.kts` pins AGP 8.12.1 (AGP 9 is incompatible with
-`flutter_inappwebview_android` 1.1.x).
+Note: `android/settings.gradle.kts` pins AGP 8.12.1.

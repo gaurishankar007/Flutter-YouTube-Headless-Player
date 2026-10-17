@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:youtube_headless_player/src/ui/controllers/youtube_player_controller.dart';
 
@@ -8,6 +9,9 @@ import 'package:youtube_headless_player/src/ui/controllers/youtube_player_contro
 /// The slider stays collapsed until the pointer hovers over the control
 /// (desktop/web) or the button is tapped once (touch); tapping while
 /// revealed toggles mute — matching the YouTube web player.
+///
+/// On iOS (native and Safari) WebKit ignores volume changes, so the
+/// control is a plain mute/unmute button there; see [showSlider].
 class const YoutubeVolumeSlider({
   /// The controller to observe and act on.
   required final YoutubePlayerController controller,
@@ -17,6 +21,13 @@ class const YoutubeVolumeSlider({
 
   /// Color of the icon and slider.
   final Color color = Colors.white,
+
+  /// Whether the volume slider is available.
+  ///
+  /// When `null` (the default) it is available everywhere except iOS,
+  /// where the button only toggles mute. Passing `true` on iOS shows a
+  /// slider that has no effect.
+  final bool? showSlider,
   super.key,
 }) extends StatefulWidget {
   /// Creates a volume control bound to [controller].
@@ -39,10 +50,13 @@ class _YoutubeVolumeSliderState extends State<YoutubeVolumeSlider> {
   /// Whether the slider is currently revealed. Mirrors the YouTube web
   /// player: revealed while the pointer hovers over the control, or after
   /// a tap on the button (touch devices have no hover).
-  bool get _revealed => _hovering || _pinnedOpen;
+  bool get _revealed => _sliderEnabled && (_hovering || _pinnedOpen);
+
+  bool get _sliderEnabled =>
+      widget.showSlider ?? defaultTargetPlatform != TargetPlatform.iOS;
 
   void _handleButtonPressed() {
-    if (!_revealed) {
+    if (_sliderEnabled && !_revealed) {
       setState(() => _pinnedOpen = true);
       return;
     }
@@ -78,7 +92,7 @@ class _YoutubeVolumeSliderState extends State<YoutubeVolumeSlider> {
                 onPressed: _handleButtonPressed,
                 color: widget.color,
                 icon: Icon(volumeIcon),
-                tooltip: !_revealed
+                tooltip: _sliderEnabled && !_revealed
                     ? 'Volume'
                     : (value.isMuted ? 'Unmute' : 'Mute'),
               ),

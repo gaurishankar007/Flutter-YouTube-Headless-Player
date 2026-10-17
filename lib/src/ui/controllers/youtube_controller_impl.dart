@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:meta/meta.dart';
 import 'package:youtube_headless_player/src/data/services/youtube_bridge.dart';
+import 'package:youtube_headless_player/src/data/services/youtube_engine_transport.dart';
 import 'package:youtube_headless_player/src/domain/models/youtube_player_event.dart';
 import 'package:youtube_headless_player/src/domain/models/youtube_player_value.dart';
 import 'package:youtube_headless_player/src/ui/controllers/youtube_player_controller.dart';
@@ -12,8 +12,8 @@ import 'package:youtube_headless_player/src/ui/controllers/youtube_player_contro
 ///
 /// Owns the JavaScript bridge, the typed event stream, and the queue of
 /// commands issued before the player becomes ready. The public controller
-/// delegates every playback command here; the WebView host widget attaches
-/// and detaches the underlying [InAppWebViewController].
+/// delegates every playback command here; the platform engine view
+/// attaches and detaches its [YoutubeEngineTransport].
 @internal
 class YoutubeControllerImpl({
   /// The public controller whose [YoutubePlayerValue] this class mutates.
@@ -44,23 +44,31 @@ class YoutubeControllerImpl({
   /// parameter of the engine document on web).
   String get playerId => _bridge.playerId;
 
-  /// Connects the bridge to a freshly created WebView.
+  /// Connects the bridge to a freshly created engine.
   ///
-  /// Called by the WebView host from `onWebViewCreated`.
-  void attachWebView(InAppWebViewController webViewController) {
+  /// Called by the platform engine view once its transport exists.
+  void attachEngine(YoutubeEngineTransport transport) {
     if (_isDisposed) {
       return;
     }
     _bridge.attach(
-      webViewController,
+      transport,
       onEvent: _handleEvent,
       onPageReady: () => unawaited(onPageLoaded()),
     );
   }
 
+  /// Forwards a JSON [payload] posted by the engine to the bridge.
+  void receiveEnginePayload(Map<String, Object?> payload) {
+    if (_isDisposed) {
+      return;
+    }
+    _bridge.receive(payload);
+  }
+
   /// Sends the `initialize` command to the JavaScript engine.
   ///
-  /// Called from `onLoadStop` and from every `pageReady` announcement the
+  /// Called when the engine document finishes loading and from every `pageReady` announcement the
   /// engine emits before it is initialized. The command is idempotent on
   /// the JavaScript side, so duplicate sends are harmless.
   Future<void> onPageLoaded() async {
@@ -70,15 +78,15 @@ class YoutubeControllerImpl({
     await _bridge.send(YoutubeCommand('initialize', _initializeParams()));
   }
 
-  /// Disconnects the bridge when the WebView leaves the tree.
+  /// Disconnects the bridge when the engine view leaves the tree.
   ///
-  /// Called from the WebView host's `dispose`, which can run while the
+  /// Called from the engine view's `dispose`, which can run while the
   /// element tree is locked (e.g. the subtree is being unmounted during a
   /// fullscreen layout swap). Notifying listeners synchronously there makes
   /// `ValueListenableBuilder`s call `markNeedsBuild` inside the locked
   /// phase and crash, so the value update is deferred when a frame is in
   /// flight.
-  void detachWebView() {
+  void detachEngine() {
     _bridge.detach();
     _clearPendingSeek();
     if (_isDisposed) {
@@ -149,7 +157,7 @@ class YoutubeControllerImpl({
     _isDisposed = true;
     _pendingCommands.clear();
     _clearPendingSeek();
-    // Best effort: tear down the JS player if a WebView is still attached.
+    // Best effort: tear down the JS player if an engine is still attached.
     unawaited(_bridge.send(const YoutubeCommand('destroy')));
     _bridge.detach();
     unawaited(_eventController.close());
@@ -300,7 +308,7 @@ final Expando<YoutubeControllerImpl> _implementations =
 /// a [controller].
 ///
 /// Keeps the engine-facing half completely out of the public API surface:
-/// both [YoutubePlayerController] and the WebView host reach it through this
+/// both [YoutubePlayerController] and the engine views reach it through this
 /// package-private registry instead of a public member on the controller.
 @internal
 YoutubeControllerImpl youtubeControllerImplOf(

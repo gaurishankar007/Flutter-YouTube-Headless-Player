@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.2.0
+
+- **No web setup anymore:** the player no longer needs the
+  `flutter_inappwebview` `web_support.js` script in your `web/index.html`
+  (you can remove it). On web the player now runs in a plain iframe.
+- **WASM-ready:** the package works with `flutter build web --wasm`.
+- Android, iOS and macOS now use the official `webview_flutter` plugin
+  instead of `flutter_inappwebview`, which drops the AGP 8.x restriction
+  that `flutter_inappwebview_android` imposed.
+- **Windows is no longer supported.** `webview_flutter` has no Windows
+  implementation, and Windows was never tested.
+- macOS apps need the `com.apple.security.network.client` entitlement
+  (see the README).
+- The README now documents the `INTERNET` permission Android release
+  builds need.
+- The volume control now shows on every platform, not only web. On iOS
+  (app and Safari) it is a mute/unmute button, because iOS doesn't let
+  apps change video volume. `YoutubeVolumeSlider.showSlider` overrides
+  this.
+- The example app no longer starts videos muted.
+
 ## 0.1.1
 
 - Now requires Dart 3.13 (already included with Flutter 3.47, the minimum
