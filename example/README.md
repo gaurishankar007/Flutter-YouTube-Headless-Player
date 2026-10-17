@@ -21,9 +21,19 @@ The home screen lists three demos, each with its own controller:
 
 ## Run
 
+The platform folders aren't checked in. Generate them first:
+
+```bash
+flutter create --platforms=android,ios,macos,web .
+```
+
+Then run:
+
 ```bash
 flutter run -d chrome   # web
 flutter run             # connected Android/iOS device
 ```
 
-Note: `android/settings.gradle.kts` pins AGP 8.12.1.
+For an Android release build, add the `INTERNET` permission to
+`android/app/src/main/AndroidManifest.xml`; for macOS, add the
+`com.apple.security.network.client` entitlement (see the package README).
