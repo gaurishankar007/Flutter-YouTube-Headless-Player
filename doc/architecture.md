@@ -221,3 +221,13 @@ YouTube removed programmatic quality control from the IFrame API — both
 server-side. Quality is chosen adaptively; the level actually in use is
 reported through `QualityChangedEvent` / `value.quality`. `YoutubeQualityMenu`
 still exists, but `YoutubeControls` hides it by default for this reason.
+
+---
+
+## Language level
+
+The package targets Dart 3.13 / Flutter 3.47 and uses the idioms they allow:
+primary constructors (`class const Foo({required final int a}) extends Bar`),
+dot shorthands (`.zero`, `const .all(12)`, `case .space || .keyK:`) and
+patterns (switch expressions, map patterns). Public constructors keep their
+doc comment on a `this;` body, which `public_member_api_docs` requires.

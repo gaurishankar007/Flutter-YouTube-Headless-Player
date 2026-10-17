@@ -168,7 +168,7 @@ Apps that lock orientations globally should set `YoutubeFullscreenManager.restor
 
 A complete demo app (minimal setup, built-in controls with video switching and a live event log, and a fully custom UI built from the standalone widgets) lives in [`example/`](https://github.com/gaurishankar007/Flutter-YouTube-Headless-Player/tree/main/example).
 
-Curious how it works under the hood? See the [architecture doc](https://github.com/gaurishankar007/Flutter-YouTube-Headless-Player/blob/main/docs/architecture.md).
+Curious how it works under the hood? See the [architecture doc](https://github.com/gaurishankar007/Flutter-YouTube-Headless-Player/blob/main/doc/architecture.md).
 
 ## ❤️ Additional information
 
