@@ -7,7 +7,7 @@
 
 ---
 
-A YouTube player for Flutter whose interface is built entirely in Flutter. Use the ready-made YouTube-style controls, or build your own from scratch. Works the same way on Android, iOS and Web.
+A YouTube player for Flutter whose interface is built entirely in Flutter. Use the ready-made YouTube-style controls, or build your own from scratch. Works the same way on Android, iOS and Web. macOS and Windows are supported by the underlying WebView but haven't been tested yet.
 
 Video playback runs in a hidden WebView through the official [YouTube IFrame Player API](https://developers.google.com/youtube/iframe_api_reference), but viewers never touch it: every button, slider, gesture and menu is a Flutter widget you can style, rearrange or replace.
 
@@ -42,7 +42,7 @@ Add the following line to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  youtube_headless_player: ^0.1.0
+  youtube_headless_player: ^0.1.1
 ```
 
 ### Web

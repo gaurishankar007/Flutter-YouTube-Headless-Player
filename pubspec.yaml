@@ -1,12 +1,19 @@
 name: youtube_headless_player
 description: >-
   A headless YouTube player whose UI is built entirely in Flutter. Use the
-  ready-made YouTube-style controls or build your own. Android, iOS and Web.
-version: 0.1.0
+  ready-made YouTube-style controls or build your own.
+version: 0.1.1
 homepage: https://github.com/gaurishankar007/Flutter-YouTube-Headless-Player
 repository: https://github.com/gaurishankar007/Flutter-YouTube-Headless-Player
 documentation: https://github.com/gaurishankar007/Flutter-YouTube-Headless-Player
 issue_tracker: https://github.com/gaurishankar007/Flutter-YouTube-Headless-Player/issues
+
+platforms:
+  android:
+  ios:
+  macos:
+  web:
+  windows:
 
 environment:
   sdk: ">=3.13.0 <4.0.0"

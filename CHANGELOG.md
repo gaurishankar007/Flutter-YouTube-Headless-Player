@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.1
+
+- Now requires Dart 3.13 (already included with Flutter 3.47, the minimum
+  Flutter version).
+- pub.dev now lists the supported platforms: Android, iOS and Web, plus
+  macOS and Windows, which the underlying WebView supports but which
+  haven't been tested yet.
+- Rewrote the README around what the package does and how to use it; the
+  internals moved to `doc/architecture.md`.
+- The example app now has three demos: a minimal setup, the built-in
+  controls, and a custom UI built from the standalone control widgets.
+
 ## 0.1.0
 
 First release of `youtube_headless_player` — a YouTube player
