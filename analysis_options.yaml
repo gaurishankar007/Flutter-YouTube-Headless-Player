@@ -1,0 +1,24 @@
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+include: package:leancode_lint/analysis_options.yaml
+
+linter:
+  rules:
+    - always_put_control_body_on_new_line
+    - always_use_package_imports
+    - avoid_void_async
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_final_locals
+    - prefer_single_quotes
+    - public_member_api_docs
+    - sort_constructors_first
+    - unnecessary_const
+    - unnecessary_lambdas
