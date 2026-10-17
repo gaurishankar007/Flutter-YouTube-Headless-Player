@@ -35,7 +35,7 @@ class const YoutubePlayer({
 
   /// How the video surface is inscribed into the widget's bounds
   /// (e.g. [BoxFit.cover] crops instead of letterboxing).
-  final BoxFit fit = BoxFit.contain,
+  final BoxFit fit = .contain,
 
   /// The aspect ratio of the widget itself.
   ///
@@ -144,8 +144,8 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
     // Instant transitions: the player content is reparented between the
     // inline location and the page, and animating that reads as flicker.
     final route = PageRouteBuilder<void>(
-      transitionDuration: Duration.zero,
-      reverseTransitionDuration: Duration.zero,
+      transitionDuration: .zero,
+      reverseTransitionDuration: .zero,
       pageBuilder: (context, animation, secondaryAnimation) {
         return Scaffold(
           backgroundColor: widget.backgroundColor,
@@ -240,7 +240,7 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
           color: widget.backgroundColor,
           child: ClipRect(
             child: Stack(
-              fit: StackFit.expand,
+              fit: .expand,
               children: [
                 _FittedVideoSurface(
                   fit: widget.fit,

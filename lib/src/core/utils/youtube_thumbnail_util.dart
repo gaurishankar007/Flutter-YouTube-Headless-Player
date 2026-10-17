@@ -6,7 +6,7 @@ import 'package:youtube_headless_player/src/core/constants/youtube_thumbnail_qua
 /// when the consumer cannot decode WebP.
 String youtubeThumbnailUrl({
   required String videoId,
-  YoutubeThumbnailQuality quality = YoutubeThumbnailQuality.standard,
+  YoutubeThumbnailQuality quality = .standard,
   bool webp = true,
 }) {
   return webp

@@ -72,17 +72,17 @@ class _YoutubeGestureDetectorState extends State<YoutubeGestureDetector> {
       _ => _GestureZone.center,
     };
     switch (zone) {
-      case _GestureZone.backward:
+      case .backward:
         if (widget.onDoubleTapBackward == null) {
           return;
         }
         widget.onDoubleTapBackward!();
-      case _GestureZone.forward:
+      case .forward:
         if (widget.onDoubleTapForward == null) {
           return;
         }
         widget.onDoubleTapForward!();
-      case _GestureZone.center:
+      case .center:
         widget.onDoubleTapCenter?.call();
         return;
     }
@@ -102,24 +102,24 @@ class _YoutubeGestureDetectorState extends State<YoutubeGestureDetector> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+      behavior: .opaque,
       onTap: widget.onTap,
       onDoubleTapDown: (details) =>
           _lastDoubleTapPosition = details.localPosition,
       onDoubleTap: _handleDoubleTap,
       child: Stack(
-        fit: StackFit.expand,
+        fit: .expand,
         children: [
           if (widget.child != null) widget.child!,
           _SeekFeedback(
-            visible: _feedbackZone == _GestureZone.backward,
-            alignment: Alignment.centerLeft,
+            visible: _feedbackZone == .backward,
+            alignment: .centerLeft,
             icon: Icons.fast_rewind_rounded,
             seconds: widget.seekStep.inSeconds,
           ),
           _SeekFeedback(
-            visible: _feedbackZone == _GestureZone.forward,
-            alignment: Alignment.centerRight,
+            visible: _feedbackZone == .forward,
+            alignment: .centerRight,
             icon: Icons.fast_forward_rounded,
             seconds: widget.seekStep.inSeconds,
           ),
@@ -144,14 +144,14 @@ class const _SeekFeedback({
       child: Align(
         alignment: alignment,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
+          padding: const .symmetric(
             horizontal: _YoutubeGestureDetectorState._feedbackHorizontalInset,
           ),
           child: AnimatedOpacity(
             opacity: visible ? 1 : 0,
             duration: _fadeDuration,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 Icon(
                   icon,

@@ -13,9 +13,9 @@ class const YoutubeErrorBanner({
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const .all(24),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             const Icon(
               Icons.error_outline_rounded,
@@ -25,7 +25,7 @@ class const YoutubeErrorBanner({
             const SizedBox(height: 8),
             Text(
               message ?? 'Playback failed.',
-              textAlign: TextAlign.center,
+              textAlign: .center,
               style: const TextStyle(color: Colors.white),
             ),
           ],

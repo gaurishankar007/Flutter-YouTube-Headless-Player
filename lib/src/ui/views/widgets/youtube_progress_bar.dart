@@ -106,7 +106,7 @@ class _YoutubeProgressBarState extends State<YoutubeProgressBar> {
 
   void _seekToFraction(double fraction) {
     final duration = widget.controller.value.duration;
-    if (duration <= Duration.zero) {
+    if (duration <= .zero) {
       return;
     }
     unawaited(widget.controller.seekTo(duration * fraction));
@@ -131,7 +131,7 @@ class _YoutubeProgressBarState extends State<YoutubeProgressBar> {
               // cursor like the real YouTube seek bar.
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
+                behavior: .opaque,
                 onTapDown: (details) =>
                     _handleTapDown(details.localPosition, width),
                 onTapUp: (details) =>

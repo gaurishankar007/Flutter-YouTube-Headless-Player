@@ -134,62 +134,52 @@ class YoutubeBridge {
   /// [YoutubePlayerEvent]. Returns `null` for unknown event names.
   @visibleForTesting
   static YoutubePlayerEvent? decodeEvent(Map<String, Object?> payload) {
-    switch (payload['event']) {
-      case 'ready':
-        return ReadyEvent(
-          duration: _duration(payload['duration']),
-          volume: _int(payload['volume'], fallback: 100),
-          isMuted: payload['muted'] == true,
-          playbackRate: _double(payload['rate'], fallback: 1),
-          availablePlaybackRates: _doubleList(payload['availableRates']),
-          availableQualities: _qualityList(payload['availableQualities']),
-        );
-      case 'playing':
-        return const PlayingEvent();
-      case 'paused':
-        return const PausedEvent();
-      case 'buffering':
-        return const BufferingEvent();
-      case 'ended':
-        return const EndedEvent();
-      case 'idle':
-        return const IdleEvent();
-      case 'progress':
-        return ProgressEvent(
-          position: _duration(payload['position']),
-          duration: _duration(payload['duration']),
-          bufferedFraction: _double(payload['buffered'], fallback: 0),
-        );
-      case 'durationChanged':
-        return DurationChangedEvent(duration: _duration(payload['duration']));
-      case 'qualityChanged':
-        return QualityChangedEvent(
-          quality: YoutubeQuality.fromCode(payload['quality'] as String?),
-          availableQualities: _qualityList(payload['availableQualities']),
-        );
-      case 'playbackRateChanged':
-        return PlaybackRateChangedEvent(
-          playbackRate: _double(payload['rate'], fallback: 1),
-        );
-      case 'volumeChanged':
-        return VolumeChangedEvent(
-          volume: _int(payload['volume'], fallback: 100),
-          isMuted: payload['muted'] == true,
-        );
-      case 'captionsChanged':
-        return CaptionsChangedEvent(isEnabled: payload['enabled'] == true);
-      case 'error':
-        return ErrorEvent(
-          code: _int(payload['code'], fallback: -1),
-          message: payload['message'] as String? ?? 'Unknown player error.',
-        );
-      case 'videoLoaded':
-        return VideoLoadedEvent(videoId: payload['videoId'] as String? ?? '');
-      case 'videoCued':
-        return VideoCuedEvent(videoId: payload['videoId'] as String?);
-      default:
-        return null;
-    }
+    return switch (payload['event']) {
+      'ready' => ReadyEvent(
+        duration: _duration(payload['duration']),
+        volume: _int(payload['volume'], fallback: 100),
+        isMuted: payload['muted'] == true,
+        playbackRate: _double(payload['rate'], fallback: 1),
+        availablePlaybackRates: _doubleList(payload['availableRates']),
+        availableQualities: _qualityList(payload['availableQualities']),
+      ),
+      'playing' => const PlayingEvent(),
+      'paused' => const PausedEvent(),
+      'buffering' => const BufferingEvent(),
+      'ended' => const EndedEvent(),
+      'idle' => const IdleEvent(),
+      'progress' => ProgressEvent(
+        position: _duration(payload['position']),
+        duration: _duration(payload['duration']),
+        bufferedFraction: _double(payload['buffered'], fallback: 0),
+      ),
+      'durationChanged' => DurationChangedEvent(
+        duration: _duration(payload['duration']),
+      ),
+      'qualityChanged' => QualityChangedEvent(
+        quality: .fromCode(payload['quality'] as String?),
+        availableQualities: _qualityList(payload['availableQualities']),
+      ),
+      'playbackRateChanged' => PlaybackRateChangedEvent(
+        playbackRate: _double(payload['rate'], fallback: 1),
+      ),
+      'volumeChanged' => VolumeChangedEvent(
+        volume: _int(payload['volume'], fallback: 100),
+        isMuted: payload['muted'] == true,
+      ),
+      'captionsChanged' => CaptionsChangedEvent(
+        isEnabled: payload['enabled'] == true,
+      ),
+      'error' => ErrorEvent(
+        code: _int(payload['code'], fallback: -1),
+        message: payload['message'] as String? ?? 'Unknown player error.',
+      ),
+      'videoLoaded' => VideoLoadedEvent(
+        videoId: payload['videoId'] as String? ?? '',
+      ),
+      'videoCued' => VideoCuedEvent(videoId: payload['videoId'] as String?),
+      _ => null,
+    };
   }
 
   static Duration _duration(Object? seconds) {

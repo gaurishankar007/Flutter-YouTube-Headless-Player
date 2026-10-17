@@ -28,7 +28,7 @@ abstract final class YoutubeFullscreenManager {
     if (kIsWeb) {
       return;
     }
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    await SystemChrome.setEnabledSystemUIMode(.immersiveSticky);
     await SystemChrome.setPreferredOrientations(orientations);
   }
 
@@ -38,7 +38,7 @@ abstract final class YoutubeFullscreenManager {
     if (kIsWeb) {
       return;
     }
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    await SystemChrome.setEnabledSystemUIMode(.edgeToEdge);
     final restore = restoreOrientations;
     if (restore != null) {
       await restore();

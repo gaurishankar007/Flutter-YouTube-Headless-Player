@@ -56,7 +56,7 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ],
-    this.portraitFullscreenOrientations = const [DeviceOrientation.portraitUp],
+    this.portraitFullscreenOrientations = const [.portraitUp],
     this.videoAspectRatio = defaultVideoAspectRatio,
   }) : super(
          YoutubePlayerValue(
@@ -86,7 +86,7 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ],
-    this.portraitFullscreenOrientations = const [DeviceOrientation.portraitUp],
+    this.portraitFullscreenOrientations = const [.portraitUp],
     this.videoAspectRatio = defaultVideoAspectRatio,
   }) : assert(
          youtubeVideoIdFromUrl(videoUrl) != null,
@@ -259,7 +259,7 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
   /// JPEG. See [YoutubeThumbnailQuality] for the available resolutions.
   static String getThumbnail({
     required String videoId,
-    YoutubeThumbnailQuality quality = YoutubeThumbnailQuality.standard,
+    YoutubeThumbnailQuality quality = .standard,
     bool webp = true,
   }) {
     return youtubeThumbnailUrl(videoId: videoId, quality: quality, webp: webp);
@@ -271,7 +271,7 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
   /// Returns `null` when no video id can be extracted.
   static String? getThumbnailUrl(
     String videoUrl, {
-    YoutubeThumbnailQuality quality = YoutubeThumbnailQuality.standard,
+    YoutubeThumbnailQuality quality = .standard,
     bool webp = true,
   }) {
     final videoId = convertUrlToId(videoUrl);
@@ -285,7 +285,7 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
   /// or `null` when no video is set. Useful as the `YoutubePlayer`
   /// placeholder while the player initializes.
   String? thumbnailUrl({
-    YoutubeThumbnailQuality quality = YoutubeThumbnailQuality.standard,
+    YoutubeThumbnailQuality quality = .standard,
     bool webp = true,
   }) {
     final videoId = value.videoId ?? initialVideoId;
@@ -330,7 +330,7 @@ class YoutubePlayerController extends ValueNotifier<YoutubePlayerValue> {
 
   /// Replays the current video from the beginning.
   Future<void> replay() async {
-    await seekTo(Duration.zero);
+    await seekTo(.zero);
     await play();
   }
 

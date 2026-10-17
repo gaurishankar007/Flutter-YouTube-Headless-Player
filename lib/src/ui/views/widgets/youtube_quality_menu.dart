@@ -32,7 +32,7 @@ class const YoutubeQualityMenu({
             ? [
                 YoutubeQuality.auto,
                 ...value.availableQualities.where(
-                  (quality) => quality != YoutubeQuality.auto,
+                  (quality) => quality != .auto,
                 ),
               ]
             : YoutubeQuality.values;

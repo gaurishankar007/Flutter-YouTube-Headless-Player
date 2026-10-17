@@ -15,10 +15,7 @@ class const ExampleApp({super.key}) extends StatelessWidget {
     return MaterialApp(
       title: 'youtube_headless_player example',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorSchemeSeed: Colors.red,
-        brightness: Brightness.dark,
-      ),
+      theme: ThemeData(colorSchemeSeed: Colors.red, brightness: .dark),
       home: const HomeScreen(),
     );
   }
@@ -31,7 +28,7 @@ class const HomeScreen({super.key}) extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('YouTube Headless Player')),
       body: ListView(
-        padding: const EdgeInsets.all(12),
+        padding: const .all(12),
         children: [
           _DemoTile(
             icon: Icons.play_circle,

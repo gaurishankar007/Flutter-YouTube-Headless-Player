@@ -193,6 +193,6 @@ class _YoutubeWebViewState extends State<YoutubeWebView> {
                 'playerId': youtubeControllerImplOf(widget.controller).playerId,
               },
             );
-    return WebUri.uri(assetUrl);
+    return .uri(assetUrl);
   }
 }

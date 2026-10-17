@@ -14,16 +14,16 @@ class const YoutubePlayerValue({
   final bool isReady = false,
 
   /// The raw playback state reported by the player.
-  final YoutubePlayerState playerState = YoutubePlayerState.unknown,
+  final YoutubePlayerState playerState = .unknown,
 
   /// The id of the currently loaded or cued video, if any.
   final String? videoId,
 
   /// Current playback position.
-  final Duration position = Duration.zero,
+  final Duration position = .zero,
 
   /// Total duration of the current video ([Duration.zero] until known).
-  final Duration duration = Duration.zero,
+  final Duration duration = .zero,
 
   /// Fraction of the video that is buffered, from `0.0` to `1.0`.
   final double bufferedFraction = 0,
@@ -41,7 +41,7 @@ class const YoutubePlayerValue({
   final List<double> availablePlaybackRates = const [],
 
   /// Current playback quality.
-  final YoutubeQuality quality = YoutubeQuality.auto,
+  final YoutubeQuality quality = .auto,
 
   /// Quality levels available for the current video (empty until the
   /// player reports them, typically once playback starts).
@@ -79,16 +79,16 @@ class const YoutubePlayerValue({
   this;
 
   /// Whether the video is currently playing.
-  bool get isPlaying => playerState == YoutubePlayerState.playing;
+  bool get isPlaying => playerState == .playing;
 
   /// Whether playback is paused.
-  bool get isPaused => playerState == YoutubePlayerState.paused;
+  bool get isPaused => playerState == .paused;
 
   /// Whether the player is buffering.
-  bool get isBuffering => playerState == YoutubePlayerState.buffering;
+  bool get isBuffering => playerState == .buffering;
 
   /// Whether playback reached the end of the video.
-  bool get hasEnded => playerState == YoutubePlayerState.ended;
+  bool get hasEnded => playerState == .ended;
 
   /// Whether the player reported an error.
   bool get hasError => errorCode != null;

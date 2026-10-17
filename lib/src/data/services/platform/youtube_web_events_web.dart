@@ -32,13 +32,13 @@ void registerYoutubeWebEventListener(
     } on FormatException {
       return;
     }
-    if (decoded is! Map ||
-        decoded['source'] != _messageSource ||
-        decoded['playerId'] != playerId) {
-      return;
-    }
-    final payload = decoded['payload'];
-    if (payload is Map) {
+    if (decoded
+        case {
+          'source': _messageSource,
+          'playerId': final Object? id,
+          'payload': final Map<Object?, Object?> payload,
+        }
+        when id == playerId) {
       onEvent(Map<String, Object?>.from(payload));
     }
   }

@@ -52,7 +52,7 @@ class _CustomControlsScreenState extends State<CustomControlsScreen> {
           ),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(12),
+              padding: const .all(12),
               children: [
                 _CommandPanel(controller: _controller),
                 const Divider(height: 32),
@@ -83,7 +83,7 @@ class const _CustomOverlay({required final YoutubePlayerController controller})
   @override
   Widget build(BuildContext context) {
     return Stack(
-      fit: StackFit.expand,
+      fit: .expand,
       children: [
         YoutubeGestureDetector(
           seekStep: _seekStep,
@@ -109,19 +109,19 @@ class const _CustomOverlay({required final YoutubePlayerController controller})
           },
         ),
         Align(
-          alignment: Alignment.bottomCenter,
+          alignment: .bottomCenter,
           child: DecoratedBox(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+                begin: .topCenter,
+                end: .bottomCenter,
                 colors: [Colors.transparent, Colors.black87],
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const .symmetric(horizontal: 8),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   YoutubeProgressBar(
                     controller: controller,
@@ -200,7 +200,7 @@ class const _CommandPanel({required final YoutubePlayerController controller})
         ];
 
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text('Commands', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
@@ -248,13 +248,13 @@ class const _StatePanel({required final YoutubePlayerController controller})
         ];
 
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text('Live state', style: textTheme.titleMedium),
             const SizedBox(height: 8),
             for (final (label, text) in rows)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
+                padding: const .symmetric(vertical: 2),
                 child: Row(
                   children: [
                     SizedBox(

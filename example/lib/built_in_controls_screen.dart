@@ -24,7 +24,7 @@ class _BuiltInControlsScreenState extends State<BuiltInControlsScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController.fromUrl(
+    _controller = .fromUrl(
       demoVideos.first.url,
       autoPlay: true,
       startMuted: true,
@@ -85,13 +85,13 @@ class _BuiltInControlsScreenState extends State<BuiltInControlsScreen> {
             controller: _controller,
             placeholder: Image.network(
               _controller.thumbnailUrl()!,
-              fit: BoxFit.cover,
-              webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
+              fit: .cover,
+              webHtmlElementStrategy: .fallback,
             ),
           ),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(12),
+              padding: const .all(12),
               children: [
                 Text('Videos', style: textTheme.titleMedium),
                 const SizedBox(height: 4),
@@ -135,19 +135,16 @@ class const _VideoTile({
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.zero,
+      contentPadding: .zero,
       selected: isCurrent,
       leading: ClipRRect(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: .circular(4),
         child: Image.network(
-          YoutubePlayerController.getThumbnailUrl(
-            video.url,
-            quality: YoutubeThumbnailQuality.medium,
-          )!,
+          YoutubePlayerController.getThumbnailUrl(video.url, quality: .medium)!,
           width: 64,
           height: 36,
-          fit: BoxFit.cover,
-          webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
+          fit: .cover,
+          webHtmlElementStrategy: .fallback,
         ),
       ),
       title: Text(video.title),

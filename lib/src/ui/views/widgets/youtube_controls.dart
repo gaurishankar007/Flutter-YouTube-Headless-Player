@@ -185,7 +185,7 @@ class _YoutubeControlsState extends State<YoutubeControls> {
   bool get _isMobile =>
       !kIsWeb &&
       (defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.android);
+          defaultTargetPlatform == .android);
 
   /// Handles a single tap on any empty part of the player — the video
   /// surface itself or the blank space around the bottom bar's controls.
@@ -256,35 +256,35 @@ class _YoutubeControlsState extends State<YoutubeControls> {
 
   KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
     if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
-      return KeyEventResult.ignored;
+      return .ignored;
     }
     final key = event.logicalKey;
-    if (key == LogicalKeyboardKey.space || key == LogicalKeyboardKey.keyK) {
-      _togglePlayPause();
-    } else if (key == LogicalKeyboardKey.arrowLeft ||
-        key == LogicalKeyboardKey.keyJ) {
-      _seekBy(-widget.seekStep);
-    } else if (key == LogicalKeyboardKey.arrowRight ||
-        key == LogicalKeyboardKey.keyL) {
-      _seekBy(widget.seekStep);
-    } else if (key == LogicalKeyboardKey.arrowUp) {
-      _changeVolumeBy(_volumeKeyStep);
-    } else if (key == LogicalKeyboardKey.arrowDown) {
-      _changeVolumeBy(-_volumeKeyStep);
-    } else if (key == LogicalKeyboardKey.keyM) {
-      _toggleMute();
-    } else if (key == LogicalKeyboardKey.keyF) {
-      _showControls();
-      unawaited(_controller.toggleFullscreen());
-    } else if (key.keyLabel.length == 1 &&
-        key.keyLabel.codeUnitAt(0) >= '0'.codeUnitAt(0) &&
-        key.keyLabel.codeUnitAt(0) <= '9'.codeUnitAt(0)) {
-      final digit = key.keyLabel.codeUnitAt(0) - '0'.codeUnitAt(0);
-      _seekToFraction(digit / 10);
-    } else {
-      return KeyEventResult.ignored;
+    switch (key) {
+      case .space || .keyK:
+        _togglePlayPause();
+      case .arrowLeft || .keyJ:
+        _seekBy(-widget.seekStep);
+      case .arrowRight || .keyL:
+        _seekBy(widget.seekStep);
+      case .arrowUp:
+        _changeVolumeBy(_volumeKeyStep);
+      case .arrowDown:
+        _changeVolumeBy(-_volumeKeyStep);
+      case .keyM:
+        _toggleMute();
+      case .keyF:
+        _showControls();
+        unawaited(_controller.toggleFullscreen());
+      case _
+          when key.keyLabel.length == 1 &&
+              key.keyLabel.codeUnitAt(0) >= '0'.codeUnitAt(0) &&
+              key.keyLabel.codeUnitAt(0) <= '9'.codeUnitAt(0):
+        final digit = key.keyLabel.codeUnitAt(0) - '0'.codeUnitAt(0);
+        _seekToFraction(digit / 10);
+      default:
+        return .ignored;
     }
-    return KeyEventResult.handled;
+    return .handled;
   }
 
   @override
@@ -300,7 +300,7 @@ class _YoutubeControlsState extends State<YoutubeControls> {
   /// restarts the auto-hide countdown.
   Widget _buildInteractionKeepAlive() {
     return Listener(
-      behavior: HitTestBehavior.translucent,
+      behavior: .translucent,
       onPointerDown: (_) => _keepControlsAlive(),
       onPointerMove: (_) => _keepControlsAlive(),
       // Hover events only exist for mice: moving the pointer over the
@@ -341,7 +341,7 @@ class _YoutubeControlsState extends State<YoutubeControls> {
               ? _togglePlayPause
               : null,
           child: Stack(
-            fit: StackFit.expand,
+            fit: .expand,
             children: [
               // The loading indicator stays visible even while the rest
               // of the chrome is auto-hidden.
@@ -355,7 +355,7 @@ class _YoutubeControlsState extends State<YoutubeControls> {
                 child: IgnorePointer(
                   ignoring: !showChrome,
                   child: Stack(
-                    fit: StackFit.expand,
+                    fit: .expand,
                     children: [
                       ColoredBox(
                         color: Colors.black.withValues(alpha: _scrimOpacity),
@@ -370,10 +370,7 @@ class _YoutubeControlsState extends State<YoutubeControls> {
                         ),
                       if (value.hasError)
                         YoutubeErrorBanner(message: value.errorMessage),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: _buildBottomBar(),
-                      ),
+                      Align(alignment: .bottomCenter, child: _buildBottomBar()),
                     ],
                   ),
                 ),
@@ -397,7 +394,7 @@ class _YoutubeControlsState extends State<YoutubeControls> {
     // double-tap seek zones underneath. Individual buttons still win the
     // gesture arena over this wrapper since they sit deeper in the tree.
     return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+      behavior: .opaque,
       onTap: _handleSurfaceTap,
       onDoubleTap: () {},
       child: SafeArea(
@@ -409,9 +406,9 @@ class _YoutubeControlsState extends State<YoutubeControls> {
           // No bottom padding: the buttons' own tap-target padding already
           // provides the visual breathing room, so the bar hugs the
           // bottom edge of the player like the YouTube control bar.
-          padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+          padding: const .fromLTRB(12, 4, 12, 4),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               YoutubeProgressBar(
                 controller: _controller,

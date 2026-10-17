@@ -72,7 +72,7 @@ class _YoutubeVolumeSliderState extends State<YoutubeVolumeSlider> {
                     ? Icons.volume_down_rounded
                     : Icons.volume_up_rounded);
           return Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               IconButton(
                 onPressed: _handleButtonPressed,
@@ -85,7 +85,7 @@ class _YoutubeVolumeSliderState extends State<YoutubeVolumeSlider> {
               ClipRect(
                 child: AnimatedSize(
                   duration: _revealDuration,
-                  alignment: Alignment.centerLeft,
+                  alignment: .centerLeft,
                   child: !_revealed
                       ? const SizedBox.shrink()
                       : SizedBox(
@@ -96,7 +96,7 @@ class _YoutubeVolumeSliderState extends State<YoutubeVolumeSlider> {
                               thumbShape: const RoundSliderThumbShape(
                                 enabledThumbRadius: 5,
                               ),
-                              overlayShape: SliderComponentShape.noOverlay,
+                              overlayShape: .noOverlay,
                               activeTrackColor: widget.color,
                               thumbColor: widget.color,
                               inactiveTrackColor: widget.color.withValues(

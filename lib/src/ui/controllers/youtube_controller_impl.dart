@@ -5,7 +5,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:meta/meta.dart';
 import 'package:youtube_headless_player/src/data/services/youtube_bridge.dart';
 import 'package:youtube_headless_player/src/domain/models/youtube_player_event.dart';
-import 'package:youtube_headless_player/src/domain/models/youtube_player_state.dart';
 import 'package:youtube_headless_player/src/domain/models/youtube_player_value.dart';
 import 'package:youtube_headless_player/src/ui/controllers/youtube_player_controller.dart';
 
@@ -85,7 +84,7 @@ class YoutubeControllerImpl({
     if (_isDisposed) {
       return;
     }
-    if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.idle) {
+    if (SchedulerBinding.instance.schedulerPhase == .idle) {
       controller.value = controller.value.copyWith(isReady: false);
       return;
     }
@@ -212,26 +211,17 @@ class YoutubeControllerImpl({
           isPendingAutoplay: controller.autoPlay,
         );
       case PlayingEvent():
-        return value.copyWith(
-          playerState: YoutubePlayerState.playing,
-          isPendingAutoplay: false,
-        );
+        return value.copyWith(playerState: .playing, isPendingAutoplay: false);
       case PausedEvent():
-        return value.copyWith(
-          playerState: YoutubePlayerState.paused,
-          isPendingAutoplay: false,
-        );
+        return value.copyWith(playerState: .paused, isPendingAutoplay: false);
       case BufferingEvent():
-        return value.copyWith(playerState: YoutubePlayerState.buffering);
+        return value.copyWith(playerState: .buffering);
       case EndedEvent():
         _clearPendingSeek();
-        return value.copyWith(
-          playerState: YoutubePlayerState.ended,
-          position: value.duration,
-        );
+        return value.copyWith(playerState: .ended, position: value.duration);
       case IdleEvent():
         _clearPendingSeek();
-        return value.copyWith(playerState: YoutubePlayerState.idle);
+        return value.copyWith(playerState: .idle);
       case ProgressEvent():
         final pendingSeek = _pendingSeekTarget;
         if (pendingSeek != null) {
@@ -275,7 +265,7 @@ class YoutubeControllerImpl({
         _clearPendingSeek();
         return value.copyWith(
           videoId: event.videoId,
-          position: Duration.zero,
+          position: .zero,
           bufferedFraction: 0,
           // `load` always autoplays, regardless of when in the player's
           // lifetime it's called.
@@ -284,7 +274,7 @@ class YoutubeControllerImpl({
       case VideoCuedEvent():
         _clearPendingSeek();
         return value.copyWith(
-          playerState: YoutubePlayerState.cued,
+          playerState: .cued,
           videoId: event.videoId,
           isPendingAutoplay: false,
         );
